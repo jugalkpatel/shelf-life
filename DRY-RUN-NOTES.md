@@ -172,3 +172,47 @@ This is where Shelf grew a real testable application surface. Commit history for
 - `npm run typecheck` + `npm run lint` ✓
 
 **Roadmap note:** Phase 5 in `ROADMAP.md` doesn't list Performance Budgets as a discrete phase. The lesson and lab sit between Visual Regression (Phase 4) and Runtime Probes (Phase 5) in `index.toml`, effectively adding a new phase. Not a blocker for the dry run, but the ROADMAP should probably grow a "Phase 4.5: Performance budgets" entry for internal coherence. Deferred to the final reconciliation task (#15).
+
+## Checkpoint F — Runtime tools and custom MCPs
+
+### `runtime-tools-compared.md`
+
+- ✅ Pure concept lesson comparing Playwright MCP, Chrome DevTools MCP, and Claude in Chrome. No shelf state claims, no drift.
+
+### `runtime-probes-in-the-development-loop.md`
+
+- 🔧 Replaced `bun run dev` with `npm run dev` throughout. Shelf's package.json ships npm scripts.
+
+### `writing-a-custom-mcp-wrapper.md`
+
+- 🔧 Rewrote the "What we're building" section to name the real `/shelf/[username]` public route, explain the email-prefix handle convention, and document the `{ ok, bookCount, consoleErrors, url }` result shape.
+- 🔧 Replaced the code example with the real server Shelf ships: `fs.existsSync` storage-state fallback, a `try / finally` block so one failing navigation never leaks a Chromium process, `encodeURIComponent` on the username, a heading-level-1 wait without a name matcher (since the heading is dynamic), and a `result` object that includes the `url` field for agent self-reporting.
+
+### `lab-wrap-a-custom-verification-mcp.md`
+
+- 🔧 Step 2 now names the storage-state fallback (`fs.existsSync` → use if present). The previous wording required Chromium to launch *with* the storage state, which would crash the server when the file doesn't exist (e.g., before the setup project runs).
+- 🔧 Step 7 specifies the `try / finally` shutdown pattern.
+- 🔧 Step 8 adds the `url` field and corrects the `ok` predicate to accept an empty public shelf (the `/shelf/[username]` route is a real page even for readers with zero entries).
+- 🔧 Removed "In the validated Shelf workshop repo" phrasing in favor of plain "Shelf's MCP config lives in..."
+
+### Shelf changes
+
+- 🛠 Added `src/routes/shelf/[username]/+page.server.ts` and `+page.svelte`. The route is public — it loads a reader by email-prefix handle via a SQLite `lower(substr(email, 1, instr(email, '@') - 1))` comparison and renders their shelf summary + book list read-only. This finally fulfills Phase 0's "Routes the course assumes already exist: `/shelf/:username`" entry in `ROADMAP.md`.
+- 🛠 Added `src/lib/public-shelf.ts` with the `toPublicShelfHandle(email)` helper.
+- 🛠 Added `tools/shelf-verification-server/server.ts` — the custom MCP server from the lesson. Uses `@modelcontextprotocol/sdk`'s `McpServer` + `StdioServerTransport`, registers `verify_shelf_page`, reuses `playwright/.authentication/user.json` when it exists but falls through cleanly when it doesn't, closes the browser in a `finally` block.
+- 🛠 Registered the server in `.mcp.json` alongside the existing `svelte` entry so nothing pre-existing gets clobbered.
+- 🛠 Installed `@modelcontextprotocol/sdk`, `zod`, and `tsx` as dev dependencies.
+
+**Verification:**
+
+- `npm run typecheck` ✓ — 0 errors on 1255 files.
+- `npm run lint` ✓
+- `npm run test` ✓ — 12 unit + 13 e2e, all green (including the existing accessibility scan for `/shelf` and the hardened rate-book flow).
+- Ran the MCP server end-to-end against a live preview server:
+  1. `ENABLE_TEST_SEED=true npm run build && npm run preview` on 4173.
+  2. `curl -X POST /api/testing/seed` with `resetUsers: true` to provision alice.
+  3. Spoke JSON-RPC 2.0 to the MCP server via stdio: `initialize`, `notifications/initialized`, `tools/list`, `tools/call` with `{ username: "alice" }`.
+  4. `tools/list` returned the `verify_shelf_page` tool with the full input and output schemas.
+  5. `tools/call` returned `{ ok: true, bookCount: 2, consoleErrors: [], url: "http://127.0.0.1:4173/shelf/alice" }` — the two seeded shelf entries for alice (Station Eleven + Piranesi).
+
+**Open for Checkpoint M:** The `assets/lab-custom-mcp-public-shelf.png` screenshot could benefit from being regenerated against the current `/shelf/[username]` rendering. Deferred so I don't lose flow; will revisit in the final-reconciliation task along with the other asset audits.

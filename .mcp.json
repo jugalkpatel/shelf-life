@@ -5,6 +5,14 @@
 			"command": "npx",
 			"env": {},
 			"args": ["-y", "@sveltejs/mcp"]
+		},
+		"shelf-verification": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["tsx", "./tools/shelf-verification-server/server.ts"],
+			"env": {
+				"SHELF_BASE_URL": "http://127.0.0.1:4173"
+			}
 		}
 	}
 }
