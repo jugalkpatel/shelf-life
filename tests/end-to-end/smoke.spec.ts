@@ -42,5 +42,5 @@ test('creating an account returns the reader to the protected page they asked fo
 	await page.getByRole('button', { name: 'Create account' }).click();
 
 	await expect(page).toHaveURL(/\/search\?query=piranesi$/);
-	await expect(page.getByRole('heading', { name: 'Starter results' })).toBeVisible();
+	await expect(page.getByRole('heading', { level: 1, name: /Search the library/ })).toBeVisible();
 });

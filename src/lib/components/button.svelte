@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { PathnameWithSearchOrHash } from '$app/types';
 	import type { Snippet } from 'svelte';
 
 	type ButtonKind = 'primary' | 'secondary' | 'ghost';
 	type ButtonType = 'button' | 'submit' | 'reset';
+
+	// Only accept known page pathnames (no parameterized routes) so that
+	// `resolve()` can type-check without a union distribution blow-up.
+	type PagePathname = '/' | '/login' | '/design-system' | '/search' | '/shelf';
 
 	let {
 		href,
@@ -12,13 +15,15 @@
 		type = 'button',
 		disabled = false,
 		formaction,
+		onclick,
 		children
 	}: {
-		href?: PathnameWithSearchOrHash;
+		href?: PagePathname;
 		kind?: ButtonKind;
 		type?: ButtonType;
 		disabled?: boolean;
 		formaction?: string;
+		onclick?: (event: MouseEvent) => void;
 		children?: Snippet;
 	} = $props();
 
@@ -43,7 +48,7 @@
 		{@render children?.()}
 	</a>
 {:else}
-	<button class={classes} {type} {disabled} {formaction}>
+	<button class={classes} {type} {disabled} {formaction} {onclick}>
 		{@render children?.()}
 	</button>
 {/if}

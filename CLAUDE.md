@@ -17,36 +17,54 @@ Do not report a task complete with any of these failing. If a failure looks unre
 - Public: `/`, `/login`, `/design-system`
 - Protected: `/search`, `/shelf` — gate server-side on `locals.user`, never with client guards
 - Do not reintroduce `src/routes/demo/` or any generated starter pages
-- New routes must match the Shelf product domain (books, shelves, ratings), not generic examples
+- New routes must match the Shelf product domain (books, shelves, ratings)
 
 ## How tests get written
 
 - Write a failing test before the implementation. Commit the test first.
 - Unit tests live next to the file under test as `<name>.test.ts` and run with Vitest.
 - End-to-end tests live in `tests/end-to-end/` and run with Playwright.
-- Test fixtures live in `tests/fixtures/`. Share data there instead of redefining it per spec.
+- Test fixtures live in `tests/fixtures/` (including HAR files). Share data there instead of redefining it per spec.
 
 ## Playwright locator rules
 
 - `getByRole` first. `getByLabel` or `getByText` second. `data-testid` only when semantics genuinely don't exist.
 - Never use raw CSS or XPath selectors in specs.
-- Never use `page.waitForTimeout`. Use `expect(locator).toBeVisible()`, `page.waitForResponse`, or `page.waitForRequest`.
+- Never use `page.waitForTimeout` or `page.waitForLoadState('networkidle')`. Use `expect(locator).toBeVisible()`, `page.waitForResponse`, or `page.waitForRequest`.
 - When a Playwright test fails, open `playwright-report/index.html` and its trace before proposing a fix.
 
-## UI and components
+## Playwright authentication
 
-- Reuse the primitives in `src/lib/components/` (e.g. `button.svelte`, `book-card.svelte`, `input.svelte`). Do not introduce parallel components.
-- When adjusting primitives, mirror the change in `src/routes/design-system/` so the gallery stays the visual-regression baseline.
-- Do not add an external component framework.
+- Login happens once in `tests/end-to-end/authentication.setup.ts` and all authenticated specs inherit the resulting storage state.
+- Never log in from inside a regular test. If a test redirects to `/login`, the setup file is broken — do not add a login block to the failing test.
+- Never commit `playwright/.authentication/` — it contains real session cookies.
+
+## Database seeding and isolation
+
+- Tests call `seedFreshDatabase` (setup project only) or `resetShelfContent` (individual specs) from `tests/end-to-end/helpers/seed.ts`. Both POST to the dev-only `/api/testing/seed` endpoint, which is gated on `ENABLE_TEST_SEED=true`.
+- Individual specs must never reset users — that invalidates the stored browser session. Use `resetShelfContent`.
+- The starter pins `workers: 1` in `playwright.config.ts` because every worker currently points at the same SQLite file. Do not flip `fullyParallel`-related knobs without adding per-worker database isolation first.
+
+## HAR recording
+
+- HARs live in `tests/fixtures/` and replay through `page.routeFromHAR` with `notFound: 'abort'`.
+- Never commit a new HAR without a human reviewing it — HARs can contain credentials.
+- Do not re-record a HAR to fix a failing test. If the HAR no longer matches, the application changed in a way that deserves investigation.
+
+## Accessibility
+
+- Run `tests/end-to-end/accessibility.spec.ts` after any meaningful UI change. Treat new axe violations as blocking.
+- Complex UI flows (dialogs, menus) also get a manual pass through `docs/accessibility-smoke-checklist.md`.
+- Suppressions must be scoped narrowly with a written reason in code.
 
 ## UI copy
 
-- User-facing copy stays about books, shelves, and reading. Do not mention Playwright, seeded fixtures, test IDs, HARs, course modules, or dry-run notes in page copy.
-- Testing rationale, course notes, and infrastructure details belong in code comments, `CLAUDE.md`, or `README.md` — never in rendered UI.
+- User-facing copy stays about books, shelves, and reading. Do not mention Playwright, seeded fixtures, test IDs, HARs, or course material in rendered page copy.
+- Testing rationale and infrastructure details belong in code comments, `CLAUDE.md`, or `README.md`.
 
 ## Do not
 
 - Do not silence type errors with `any` or `@ts-expect-error`. Fix the type.
 - Do not add `eslint-disable` comments. Fix the code.
-- Do not add new dependencies without flagging it in your summary.
+- Do not add new dependencies without flagging them in your summary.
 - Do not modify `src/lib/server/db/auth.schema.ts` by hand — regenerate with `npm run auth:schema`.

@@ -22,6 +22,7 @@
 		"auth:schema": "better-auth generate --config src/lib/server/auth.ts --output src/lib/server/db/auth.schema.ts --yes"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "^4.11.1",
 		"@better-auth/cli": "~1.4.21",
 		"@eslint/compat": "^2.0.4",
 		"@eslint/js": "^10.0.1",

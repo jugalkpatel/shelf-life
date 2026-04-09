@@ -1,12 +1,23 @@
+import path from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
+
+const storageStatePath = path.resolve('playwright/.authentication/user.json');
 
 export default defineConfig({
 	testDir: 'tests/end-to-end',
 	fullyParallel: true,
+	// The starter uses one shared SQLite database for every worker, so we pin
+	// workers to 1 to keep tests deterministic. When per-worker isolation is
+	// introduced in a later phase, raise this alongside the database plumbing.
+	workers: 1,
 	webServer: {
 		command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 4173',
 		port: 4173,
-		reuseExistingServer: !process.env.CI
+		reuseExistingServer: !process.env.CI,
+		env: {
+			...process.env,
+			ENABLE_TEST_SEED: 'true'
+		}
 	},
 	use: {
 		baseURL: 'http://127.0.0.1:4173'
@@ -20,10 +31,24 @@ export default defineConfig({
 	},
 	projects: [
 		{
-			name: 'chromium',
+			name: 'setup',
+			testMatch: /authentication\.setup\.ts/
+		},
+		{
+			name: 'public',
+			testMatch: /(smoke|visual)\.spec\.ts/,
 			use: {
 				...devices['Desktop Chrome']
 			}
+		},
+		{
+			name: 'authenticated',
+			testMatch: /(rate-book|accessibility|search)\.spec\.ts/,
+			use: {
+				...devices['Desktop Chrome'],
+				storageState: storageStatePath
+			},
+			dependencies: ['setup']
 		}
 	]
 });

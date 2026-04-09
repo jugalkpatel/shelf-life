@@ -8,3 +8,6 @@ bun.lockb
 # Miscellaneous
 /static/
 /drizzle/
+
+# HAR fixtures are opaque recorded artifacts — don't reformat them
+tests/fixtures/*.har

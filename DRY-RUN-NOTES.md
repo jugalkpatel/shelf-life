@@ -40,3 +40,70 @@ Shelf branch: `yet-another-dry-run` · Course branch: `playwright-dry-run-edits`
 - Every resolving path (`src/lib/components/`, `src/routes/design-system/`, `tests/end-to-end/`, `tests/fixtures/`, `src/lib/server/db/auth.schema.ts`, `playwright-report/index.html`) exists ✓
 - `grep -E 'getByRole|getByLabel|data-testid' CLAUDE.md` → 1 hit ✓
 - Has a Playwright locator rule, a TDD rule, a UI-copy rule, and a "do not" rule ✓
+
+## Checkpoint B — Testing pyramid framing
+
+### `the-testing-pyramid-as-a-feedback-hierarchy.md`
+
+- ✅ Concept-only lesson. All concrete claims (path conventions `tests/end-to-end/foo.spec.ts` and `src/routes/foo/+page.svelte`, Vitest + Playwright stack, link to the mermaid diagram) match shelf-life's state and conventions. No drift.
+
+## Checkpoint C — Playwright armor
+
+This is where Shelf grew a real testable application surface. Commit history for the starter:
+
+- 🛠 Real Open Library search in `src/lib/server/open-library.ts` (network timeout + graceful-empty fallback).
+- 🛠 Shelf CRUD API at `src/routes/api/shelf/+server.ts` and `src/routes/api/shelf/[entryId]/+server.ts` (GET, POST, PATCH, DELETE).
+- 🛠 Rate-book dialog at `src/lib/components/rate-book-dialog.svelte` with role-based markup (`role="dialog"`, radio group, "Rate this book" / "Save rating" button names).
+- 🛠 Shelf page rewritten to load real entries and expose a rating modal.
+- 🛠 Search page rewritten to POST to `/api/shelf` from the UI, with a `role="status"` live region for feedback.
+- 🛠 Dev-only seed endpoint at `src/routes/api/testing/seed/+server.ts`, gated on `ENABLE_TEST_SEED=true`. Supports `resetUsers` flag so individual specs don't invalidate the stored session.
+- 🛠 `tests/end-to-end/helpers/seed.ts` exposes `seedFreshDatabase` (setup project only), `resetShelfContent` (individual specs), and deprecated `seedDatabase` alias.
+- 🛠 `tests/end-to-end/authentication.setup.ts` + storage-state project wiring in `playwright.config.ts`.
+- 🛠 `tests/end-to-end/rate-book.spec.ts` — hardened version shipping as the starter baseline (no `waitForTimeout`, no raw `page.locator`, `getByRole` chains, `waitForResponse` on PATCH, API verification via `request.get('/api/shelf')`).
+- 🛠 `tests/end-to-end/accessibility.spec.ts` — two routes (`/shelf`, `/search`), axe-core scan with `wcag2a`, `wcag2aa` tags.
+- 🛠 `tests/end-to-end/search.spec.ts` — two tests against a committed HAR fixture at `tests/fixtures/open-library-station-eleven.har`.
+- 🛠 `docs/accessibility-smoke-checklist.md` — manual keyboard/focus pass.
+- 🛠 Updated `CLAUDE.md` with Playwright auth, seeding, HAR, and a11y rules.
+- 🛠 Extended `src/lib/components/button.svelte` with `onclick` support and constrained `href` to a narrow `PagePathname` union so `resolve()` type-checks cleanly even after parameterized API routes joined the `$app/types` pathname union.
+- 🛠 Removed empty `src/routes/demo/` tree (it was still polluting `$app/types`'s generated `RouteId` list even though the `.svelte` files were gone).
+
+**Course drift fixed inline on `playwright-dry-run-edits`:**
+
+- 🔧 `lab-rewrite-the-bad-claude-md.md`: removed "Third dry run validation" callout; merged the useful fact into prose.
+- 🔧 `storage-state-authentication.md`: replaced the "Third dry run validation" note with a "Why the UI login, not a raw POST" note in author voice. Rewrote "Skipping the UI entirely" → "When skipping the UI is worth it," swapping the example from a non-working `/login?/signInEmail` POST to a generic `/api/authentication/token` POST and explaining why Shelf specifically sticks with the UI route.
+- 🔧 `lab-harden-the-flaky-rate-book-test.md`: removed two "Third dry run" references. Reframed the lab opener to acknowledge that Shelf ships the hardened version and to direct the student to rebuild it from the rough version in the lesson. Replaced the "third dry run that means `workers: 1`" acceptance bullet with a plain "pins `workers: 1`" explanation.
+- 🔧 `the-waiting-story.md`: rewrote the "Shelf ships with a deliberately broken test" paragraph. The starter now ships the hardened spec, not the broken one.
+- 🔧 `deterministic-state-and-test-isolation.md`: rewrote the "Rule one: seeding" section to teach Shelf's real pattern (dev-only HTTP seed endpoint + `APIRequestContext` helper), replaced the fictional `$lib/server/database` / `$lib/server/schema` imports with the real paths, updated the fixture example to use `resetShelfContent`, added a "What Shelf does today, and why" section explaining `workers: 1`, and rewrote the CLAUDE.md rules block to match.
+- 🔧 `visual-regression-as-a-feedback-loop.md`: removed "Third dry run" callout.
+- 🔧 `lab-wire-visual-regression-into-the-dev-loop.md`: replaced "Third dry run" callout with plain prose referencing the deterministic-state lesson.
+- 🔧 `writing-a-custom-mcp-wrapper.md`: removed "Third dry run" callout; merged the fact into prose.
+- 🔧 `lab-wrap-a-custom-verification-mcp.md`: same.
+- 🔧 `failure-dossiers-what-agents-actually-need-from-a-red-build.md`: converted "Third dry run" callout into a `> [!TIP] The easiest way to see this work` hint.
+- 🔧 `lab-build-a-failure-dossier-for-shelf.md`: merged the "Third dry run" content into prose.
+- 🔧 `tuning-bugbot-for-your-codebase.md`: removed "Third dry run" callout; merged fact into prose.
+- 🔧 `lab-bugbot-on-a-planted-bug.md`: removed "Third dry run" callout (redundant with surrounding prose).
+- 🔧 `lab-wire-the-static-layer-into-shelf.md`: removed "Third dry run" callout.
+
+**Verification:**
+
+- `npm run typecheck` ✓ — 0 errors, 0 warnings on 1244 files.
+- `npm run lint` ✓ (after one small fix: `Error.cause` added to a rethrown signUp failure).
+- `npm run test:unit` ✓ — 12 tests pass.
+- `npm run test:e2e` ✓ — 11 tests pass across `setup`, `public` (5), and `authenticated` (5) projects.
+- Two full e2e runs back-to-back; both green, both deterministic.
+- Acceptance criteria for `lab-harden-the-flaky-rate-book-test.md`:
+  - `grep waitForTimeout tests/end-to-end/rate-book.spec.ts` → no hits ✓
+  - `grep 'page.locator(' tests/end-to-end/rate-book.spec.ts` → no hits ✓
+  - `grep "page.goto('/login')" tests/end-to-end/rate-book.spec.ts` → no hits ✓
+  - `grep 'page.fill.\[name=' tests/end-to-end/rate-book.spec.ts` → no hits ✓
+  - Test passes reliably — verified across two full suite runs.
+- Acceptance criteria for `lab-wire-accessibility-checks-into-shelf.md`:
+  - `@axe-core/playwright` installed ✓
+  - `tests/end-to-end/accessibility.spec.ts` exists and covers `/shelf` + `/search` ✓
+  - `docs/accessibility-smoke-checklist.md` exists ✓
+  - Runs inside `npm run test:e2e` ✓
+
+**Open items for later checkpoints:**
+
+- `api-and-ui-hybrid-tests.md` references `/stats`, "Currently reading" counter, and `/api/shelf` POST shapes that don't all exist yet (stats page deferred to Checkpoint L). Lesson prose still reads correctly as a pattern reference; revisit in Checkpoint L.
+- `deterministic-state-and-test-isolation.md`'s per-worker SQLite pattern is aspirational for Shelf. Consider implementing it in a future Checkpoint (the infrastructure change is real work: per-worker DB paths, webServer env forwarding, `TEST_WORKER_INDEX` read in `$lib/server/db`).

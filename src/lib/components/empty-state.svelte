@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { PathnameWithSearchOrHash } from '$app/types';
 	import Button from './button.svelte';
+
+	type PagePathname = '/' | '/login' | '/design-system' | '/search' | '/shelf';
 
 	let {
 		title,
@@ -11,7 +12,7 @@
 		title: string;
 		message: string;
 		actionLabel?: string;
-		actionHref?: PathnameWithSearchOrHash;
+		actionHref?: PagePathname;
 	} = $props();
 </script>
 
