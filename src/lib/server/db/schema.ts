@@ -9,6 +9,7 @@ export const book = sqliteTable('book', {
 	title: text('title').notNull(),
 	author: text('author').notNull(),
 	description: text('description'),
+	featuredPosition: integer('featured_position'),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' })
 		.$defaultFn(() => new Date())
 		.notNull(),
