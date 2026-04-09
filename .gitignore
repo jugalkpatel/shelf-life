@@ -30,6 +30,5 @@ tmp/
 playwright-report/
 playwright/.authentication/
 
-# Local agent/editor settings — keep project-scoped skills, ignore personal config
-.claude/settings.json
+# Local agent/editor settings — keep shared project config + skills, ignore personal overrides
 .claude/settings.local.json

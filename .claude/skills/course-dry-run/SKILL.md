@@ -10,7 +10,7 @@ Repeatable validation pass for the **Self-Testing AI Agents** course. The job is
 ## The two repositories
 
 - **Code:** `/Users/stevekinney/Developer/shelf-life` — SvelteKit + TypeScript book app, the starter a reader clones at the beginning of the course.
-- **Course:** `/Users/stevekinney/Developer/stevekinney.net/courses/self-testing-ai-agents` — 46 lesson + lab markdown files plus assets in `./assets/`. Use `index.toml` as the canonical walk order.
+- **Course:** `/Users/stevekinney/Developer/stevekinney.net/courses/self-testing-ai-agents` — 46 lesson + lab markdown files plus assets in `./assets/`. Use `index.toml` as the canonical walk order. This directory is already allowed via `.claude/settings.json`'s `additionalDirectories` entry, so you can read and edit files there directly without prompting for access.
 
 ## Working branches
 
