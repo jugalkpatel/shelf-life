@@ -1,7 +1,14 @@
 <script lang="ts">
 	import Button from './button.svelte';
 
-	type PagePathname = '/' | '/login' | '/design-system' | '/search' | '/shelf';
+	type PagePathname =
+		| '/'
+		| '/login'
+		| '/design-system'
+		| '/search'
+		| '/shelf'
+		| '/goals'
+		| '/admin/goals';
 
 	let {
 		title,

@@ -19,6 +19,24 @@ export const book = sqliteTable('book', {
 		.notNull()
 });
 
+export const readingGoal = sqliteTable('reading_goal', {
+	id: text('id')
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	year: integer('year').notNull(),
+	targetBooks: integer('target_books').notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' })
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+		.$defaultFn(() => new Date())
+		.$onUpdate(() => new Date())
+		.notNull()
+});
+
 export const shelfEntry = sqliteTable('shelf_entry', {
 	id: text('id')
 		.primaryKey()
@@ -33,6 +51,7 @@ export const shelfEntry = sqliteTable('shelf_entry', {
 		.notNull()
 		.default('to-read'),
 	rating: integer('rating'),
+	finishedAt: integer('finished_at', { mode: 'timestamp_ms' }),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' })
 		.$defaultFn(() => new Date())
 		.notNull(),

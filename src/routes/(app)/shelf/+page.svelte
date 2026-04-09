@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import Button from '$lib/components/button.svelte';
 	import EmptyState from '$lib/components/empty-state.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import RateBookDialog from '$lib/components/rate-book-dialog.svelte';
@@ -67,6 +68,41 @@
 			</p>
 		</SurfaceCard>
 	</section>
+
+	<SurfaceCard
+		title={`${data.readingGoal.year} reading goal`}
+		description={data.readingGoal.targetBooks === null
+			? 'Set your annual goal from the goals page to start tracking progress.'
+			: `You've read ${data.readingGoal.finishedBooks} of ${data.readingGoal.targetBooks} books this year.`}
+	>
+		<div class="space-y-3">
+			{#if data.readingGoal.targetBooks !== null}
+				<div
+					class="h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-soft)]"
+					role="progressbar"
+					aria-valuenow={data.readingGoal.percentage}
+					aria-valuemin="0"
+					aria-valuemax="100"
+					aria-label={`${data.readingGoal.percentage} percent of annual reading goal met`}
+				>
+					<div
+						class={`h-full ${data.readingGoal.goalMet ? 'bg-green-500' : 'bg-[var(--color-accent)]'} transition-all`}
+						style:width={`${data.readingGoal.percentage}%`}
+					></div>
+				</div>
+				{#if data.readingGoal.goalMet}
+					<p
+						role="status"
+						aria-live="polite"
+						class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-800"
+					>
+						You did it! Goal met for {data.readingGoal.year}.
+					</p>
+				{/if}
+			{/if}
+			<Button href="/goals" kind="ghost">Update your reading goal →</Button>
+		</div>
+	</SurfaceCard>
 
 	{#if feedbackMessage}
 		<div

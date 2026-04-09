@@ -363,3 +363,36 @@ All six parts of the lab landed on shelf-life:
 - `npm run test` continues to pass (13 e2e + 12 unit) — the smoke spec lives in `tests/smoke/`, outside the e2e suite's `testDir: 'tests/end-to-end'`.
 - `npm run knip` stays at 0 findings.
 - Hosted smoke loop: **not executed**. Shelf has no deploy target. The playbook documents the gap explicitly so future reconciliation knows which lines to replace when a real deploy lands.
+
+## Checkpoint L — Capstone feature
+
+### `capstone-the-whole-loop-end-to-end.md`
+
+- 🔧 Removed the "Third-run validation note" callout at the top and the closing "local Shelf repository used while developing this course" note. The "core loop now includes accessibility / performance / post-deploy" note stays — it's authorial voice, not dry-run framing.
+
+### Shelf changes
+
+- 🛠 `src/lib/server/db/schema.ts` — new `reading_goal` table (user + year + target_books) and a `finished_at` timestamp column on `shelf_entry`. Applied via `drizzle-kit push --force`.
+- 🛠 `src/lib/server/reading-goals.ts` — the whole reading-goals domain:
+  - `getReadingGoalProgress(userId, year)` loads the active goal and counts finished books in-year via `between(finishedAt, jan1, dec31)`. Returns a `{ targetBooks, finishedBooks, percentage, goalMet }` shape.
+  - `upsertReadingGoal(userId, year, targetBooks)` is an idempotent setter.
+  - `getAdministratorGoalSummary(year)` joins every reader with their goal and finished count into a ranked list + summary totals.
+- 🛠 `src/routes/(app)/goals/+page.server.ts` + `+page.svelte` — the reader-facing goal page. Loads the progress, exposes a `setGoal` form action with 1–999 validation, shows a `role="progressbar"` with live `aria-valuenow`, and renders a green "You did it!" `role="status"` badge when `goalMet`.
+- 🛠 `src/routes/(app)/shelf/+page.server.ts` + `+page.svelte` — the shelf page now fetches the reading-goal progress via `Promise.all` alongside the entries query and renders a reading-goal card above the books list. Progress bar mirrors the goals page's; "Update your reading goal" CTA is a `Button` with `href="/goals"`.
+- 🛠 `src/routes/(app)/shelf/[entryId]/+server.ts` PATCH — stamps `finishedAt: new Date()` the first time an entry transitions into `finished`, and clears it if the status moves back.
+- 🛠 `src/routes/admin/goals/+page.server.ts` + `+page.svelte` — the admin dashboard. Uses `requireAdministrator(locals.user)` from the authorization helper introduced in Checkpoint H, then renders `totalReaders`, `readersWithGoal`, `totalFinished`, and a per-reader progress table sorted by finished-book count.
+- 🛠 `CAPSTONE.md` at the repo root contains the exact four-bullet user story the lesson tells the agent to read.
+- 🛠 Button + empty-state components' `PagePathname` union grew to cover `/goals` and `/admin/goals` so the lint rule `svelte/no-navigation-without-resolve` stays satisfied on the new links.
+
+### Course assets
+
+- 🛠 Regenerated the three capstone screenshots via a one-off Playwright capture script (authenticate as alice → set a 30-book goal → mark Station Eleven finished → screenshot /goals and /shelf; then authenticate as admin → screenshot /admin/goals):
+  - `assets/capstone-goals-page.png`
+  - `assets/capstone-shelf-reading-goal.png`
+  - `assets/capstone-admin-goals-page.png`
+
+**Verification:**
+
+- `npm run typecheck` + `npm run lint` + `npm run knip` all green (1268 typecheck files, 0 errors, 0 knip findings).
+- `npm run test` — 12 unit + 13 e2e. The visual-authenticated shelf baseline was regenerated to include the new reading-goal card; the suite is stable under the new baseline.
+- Hand-verified via Playwright screenshots that `/goals`, `/shelf`, and `/admin/goals` render with correct progress, goal-met state, and admin-only gating (alice gets 403 on `/admin/goals`, admin@example.com renders it).

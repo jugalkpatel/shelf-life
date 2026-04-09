@@ -7,7 +7,14 @@
 
 	// Only accept known page pathnames (no parameterized routes) so that
 	// `resolve()` can type-check without a union distribution blow-up.
-	type PagePathname = '/' | '/login' | '/design-system' | '/search' | '/shelf';
+	type PagePathname =
+		| '/'
+		| '/login'
+		| '/design-system'
+		| '/search'
+		| '/shelf'
+		| '/goals'
+		| '/admin/goals';
 
 	let {
 		href,

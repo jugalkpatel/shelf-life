@@ -67,6 +67,16 @@ export const PATCH: RequestHandler = async ({ locals, params, request }) => {
 			return json({ error: 'status must be one of to-read, reading, finished' }, { status: 400 });
 		}
 		updates.status = body.status;
+		// Stamp a finishedAt timestamp the first time an entry moves into
+		// `finished`, and clear it if the reader puts the book back to an
+		// earlier status.
+		if (body.status === 'finished') {
+			if (row.entry.status !== 'finished') {
+				updates.finishedAt = new Date();
+			}
+		} else {
+			updates.finishedAt = null;
+		}
 	}
 	if (body.rating !== undefined) {
 		if (!isValidRating(body.rating)) {
