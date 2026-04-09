@@ -6,6 +6,11 @@
 	import PageHeader from '$lib/components/page-header.svelte';
 	import SurfaceCard from '$lib/components/surface-card.svelte';
 	import { featuredBooks } from '$lib/sample-books';
+
+	const [firstFeaturedBook] = featuredBooks;
+	if (!firstFeaturedBook) {
+		throw new Error('featuredBooks must have at least one entry');
+	}
 </script>
 
 <div class="space-y-8">
@@ -51,7 +56,7 @@
 			title="Book card"
 			description="Starter content card used in search, shelf, and tests"
 		>
-			<BookCard book={featuredBooks[0]} />
+			<BookCard book={firstFeaturedBook} />
 		</SurfaceCard>
 	</section>
 

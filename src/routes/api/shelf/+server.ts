@@ -94,28 +94,37 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 				description: body.description?.trim() ?? null
 			})
 			.returning();
+		if (!inserted) {
+			return json({ error: 'Failed to insert book' }, { status: 500 });
+		}
 		resolvedBook = inserted;
 	}
+
+	const confirmedBook = resolvedBook;
 
 	const [existingEntry] = await db
 		.select()
 		.from(shelfEntry)
-		.where(and(eq(shelfEntry.userId, locals.user.id), eq(shelfEntry.bookId, resolvedBook.id)))
+		.where(and(eq(shelfEntry.userId, locals.user.id), eq(shelfEntry.bookId, confirmedBook.id)))
 		.limit(1);
 
 	if (existingEntry) {
-		return json(serializeEntry(existingEntry, resolvedBook), { status: 200 });
+		return json(serializeEntry(existingEntry, confirmedBook), { status: 200 });
 	}
 
-	const [inserted] = await db
+	const [insertedEntry] = await db
 		.insert(shelfEntry)
 		.values({
 			userId: locals.user.id,
-			bookId: resolvedBook.id,
+			bookId: confirmedBook.id,
 			status,
 			rating: null
 		})
 		.returning();
 
-	return json(serializeEntry(inserted, resolvedBook), { status: 201 });
+	if (!insertedEntry) {
+		return json({ error: 'Failed to insert shelf entry' }, { status: 500 });
+	}
+
+	return json(serializeEntry(insertedEntry, confirmedBook), { status: 201 });
 };

@@ -10,7 +10,7 @@ const ADMINISTRATOR_EMAILS = new Set(['admin@example.com']);
  * of email addresses so the starter can demonstrate the permission flow
  * without needing an additional database column.
  */
-export const isAdministrator = (user: AuthenticatedUser | undefined): boolean => {
+const isAdministrator = (user: AuthenticatedUser | undefined): boolean => {
 	if (!user?.email) return false;
 	return ADMINISTRATOR_EMAILS.has(user.email.toLowerCase());
 };

@@ -131,6 +131,9 @@ export const POST: RequestHandler = async ({ request }) => {
 	);
 
 	const [stationEleven, piranesi] = insertedBooks;
+	if (!stationEleven || !piranesi) {
+		throw new Error('Expected at least two seeded books');
+	}
 
 	await db.insert(shelfEntry).values([
 		{

@@ -4,11 +4,12 @@ Shelf is the starter repository for the **Self-Testing AI Agents** course. It is
 
 ## What "done" means
 
-A task is not done until all three exit zero, in this order:
+A task is not done until all four exit zero, in this order:
 
 1. `npm run typecheck`
 2. `npm run lint`
-3. `npm run test`
+3. `npm run knip`
+4. `npm run test`
 
 Do not report a task complete with any of these failing. If a failure looks unrelated, say so explicitly and link the failing test name in your summary.
 
@@ -70,9 +71,22 @@ Do not report a task complete with any of these failing. If a failure looks unre
 - User-facing copy stays about books, shelves, and reading. Do not mention Playwright, seeded fixtures, test IDs, HARs, or course material in rendered page copy.
 - Testing rationale and infrastructure details belong in code comments, `CLAUDE.md`, or `README.md`.
 
+## Static layer
+
+- `eslint.config.js` bans `page.waitForTimeout`, raw `page.locator('...')` strings, `waitForLoadState('networkidle')`, and reading `userId` from the request body. The error messages name the fix and reference this file — read them instead of silencing them.
+- `tsconfig.json` ships with `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, and `noFallthroughCasesInSwitch`. Respect them. Do not bypass with `@ts-expect-error`.
+- `knip.json` is the dead-code source of truth. Every file you touch must leave `npm run knip` at zero findings — either complete the wiring so the file is actually used, or delete it.
+
+## Git hooks and secrets
+
+- `husky` manages `.husky/pre-commit` (runs `lint-staged`) and `.husky/pre-push` (typecheck + knip + unit tests). Never commit with `--no-verify`.
+- `lint-staged` runs ESLint + Prettier on staged files and then a Gitleaks scan via `scripts/run-gitleaks-staged.ts`.
+- Never commit real secrets. `sample-config.json` and `tests/fixtures/` are deliberate bait allowlisted in `.gitleaks.toml`. Use obviously-fake placeholder values (`your_api_key_here`), not strings that pattern-match real formats.
+
 ## Do not
 
 - Do not silence type errors with `any` or `@ts-expect-error`. Fix the type.
 - Do not add `eslint-disable` comments. Fix the code.
 - Do not add new dependencies without flagging them in your summary.
 - Do not modify `src/lib/server/db/auth.schema.ts` by hand — regenerate with `npm run auth:schema`.
+- Do not use `git commit --no-verify` to bypass hooks. If a hook is wrong, fix the hook.

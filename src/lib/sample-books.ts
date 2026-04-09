@@ -8,7 +8,7 @@ export type StarterBook = {
 	rating?: number | null;
 };
 
-export const starterBooks: StarterBook[] = [
+const starterBooks: StarterBook[] = [
 	{
 		id: 'station-eleven',
 		openLibraryId: 'OL26431919M',

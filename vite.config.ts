@@ -6,7 +6,7 @@ import { defineConfig } from 'vitest/config';
 
 const shouldEmitBundleStats = process.env.BUNDLE_STATS === '1';
 
-export default defineConfig({
+const base = {
 	plugins: [
 		tailwindcss(),
 		sveltekit(),
@@ -29,12 +29,11 @@ export default defineConfig({
 				]
 			: [])
 	],
-	resolve: process.env.VITEST
-		? {
-				conditions: ['browser']
-			}
-		: undefined,
 	test: {
 		include: ['src/**/*.test.ts']
 	}
-});
+};
+
+export default defineConfig(
+	process.env.VITEST ? { ...base, resolve: { conditions: ['browser'] } } : base
+);

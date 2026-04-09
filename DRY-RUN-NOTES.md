@@ -271,6 +271,31 @@ This is where Shelf grew a real testable application surface. Commit history for
 - ✅ Verified all local gates (`typecheck`, `lint`, `test` — 12 unit + 13 e2e) still pass with the bug in place. That's the whole point: no existing test covers the non-admin-authenticated path, so only a reviewer notices.
 - 🛠 Both `yet-another-dry-run` and `planted-bug/admin-feature` pushed to `origin` (`github.com/stevekinney/shelf-life`).
 
+## Checkpoint I — Static layer
+
+All six parts of the lab landed on shelf-life:
+
+- 🛠 **ESLint custom rules** — `eslint.config.js` grows two `no-restricted-syntax` blocks (global + `tests/end-to-end/`-scoped) banning `page.waitForTimeout`, raw `page.locator('...')` string selectors, `waitForLoadState('networkidle')`, and reading `userId` from the request body. Error messages reference the relevant `CLAUDE.md` sections.
+- 🛠 **TypeScript strict** — `tsconfig.json` adds `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noFallthroughCasesInSwitch` on top of `strict`. 11 existing `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes` errors fixed across `vite.config.ts`, the shelf CRUD endpoints, the seed endpoint, the `[entryId]` PATCH handler, and the design-system page (every `const [first] = array` pattern now checks the element before use).
+- 🛠 **Knip** — `knip.json` configures the SvelteKit entry/project globs. `npm run knip` (with `DATABASE_URL=file:./tmp/knip.db` so drizzle.config.ts loads without a developer `.env`). First pass flagged a dozen findings — all cleaned:
+  - Deleted `src/lib/index.ts` (unused barrel).
+  - Removed the back-compat `seedDatabase` alias from `tests/end-to-end/helpers/seed.ts`.
+  - Dropped `export` from `starterBooks`, `isAdministrator`, and `ShelfEntrySummary` (only used internally).
+  - Installed `playwright` as a direct devDependency since `tools/shelf-verification-server/server.ts` imports from it.
+  - Added `@tailwindcss/forms`, `@tailwindcss/typography`, `tailwindcss` to `ignoreDependencies` (used transitively through `@tailwindcss/vite`).
+- 🛠 **Husky + lint-staged** — `.husky/pre-commit` runs `npm run pre-commit` (→ `lint-staged`), `.husky/pre-push` runs `npm run pre-push` (→ `typecheck && knip && test:unit`). `package.json` gains a `lint-staged` block that runs ESLint + Prettier on staged `.ts`/`.svelte`/etc., Prettier on docs/JSON, and the Gitleaks staged-snapshot script on every staged file. `prepare` script preserves `playwright install` and `svelte-kit sync` after `husky init` clobbered it.
+- 🛠 **Gitleaks** — `.gitleaks.toml` allowlists `sample-config.json`, `tests/fixtures/`, `playwright-report/`, `.env.example`. `scripts/run-gitleaks-staged.ts` copies the exact git index into a `mkdtempSync` directory, runs `gitleaks dir --redact --config .gitleaks.toml`, and propagates the exit code. `sample-config.json` (new, deliberately bait) contains fake `AKIAIOSFODNN7EXAMPLE` bytes and is allowlisted.
+- 🛠 **CLAUDE.md** — "What done means" now lists four commands (`typecheck`, `lint`, `knip`, `test`). New sections: "Static layer" (names the ESLint rule block, the strict tsconfig flags, the knip source of truth) and "Git hooks and secrets" (husky, lint-staged, Gitleaks). The "Do not" section gains the `--no-verify` ban. Final file is 92 lines, under the lab's 150-line cap.
+
+**Verification:**
+
+- `npm run typecheck` ✓ (0 errors on 1258 files under strict + exactOptionalPropertyTypes + noUncheckedIndexedAccess)
+- `npm run lint` ✓
+- `npm run knip` ✓ (0 findings)
+- `npm run test` ✓ (12 unit + 13 e2e)
+- Gitleaks hook drill: staging a file containing a realistic-looking `BETTER_AUTH_SECRET` → `npx tsx scripts/run-gitleaks-staged.ts` exits `1` with "leaks found: 1". Staging the allowlisted `sample-config.json` → exits `0` with "no leaks found".
+- Lint drill: the lab's planted `page.waitForTimeout(1000)` and `page.locator('.foo')` patterns both fire on `npm run lint` and name the fix in the message; reverting the change returns lint to green.
+
 ### ⚠️ Hard gate hit
 
 - The committee-review pre-tool hook blocked `gh pr create` from running directly — per global settings, all PRs must go through the committee-review skill. That conflicts with this specific lab's goal: the PR is a deliberately planted bug that needs **Bugbot** to be the first reviewer, not Claude's internal committee.

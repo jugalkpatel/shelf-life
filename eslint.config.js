@@ -37,8 +37,42 @@ export default defineConfig(
 		}
 	},
 	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
-		rules: {}
+		// Global Playwright and SvelteKit anti-pattern guards.
+		rules: {
+			'no-restricted-syntax': [
+				'error',
+				{
+					selector:
+						"CallExpression[callee.property.name='waitForLoadState'] > Literal[value='networkidle']",
+					message: 'networkidle is unreliable. Wait on a real signal.'
+				},
+				{
+					selector:
+						"MemberExpression[object.type='MemberExpression'][object.property.name='body'][property.name='userId']",
+					message: 'Read userId from the session, not the request body. See CLAUDE.md → Auth.'
+				}
+			]
+		}
+	},
+	{
+		files: ['tests/end-to-end/**/*.ts'],
+		rules: {
+			'no-restricted-syntax': [
+				'error',
+				{
+					selector: "CallExpression[callee.property.name='waitForTimeout']",
+					message: 'page.waitForTimeout is banned. See CLAUDE.md → Playwright → Waiting.'
+				},
+				{
+					selector: "CallExpression[callee.property.name='locator'][arguments.0.type='Literal']",
+					message: 'Use a getByRole/getByLabel locator. See CLAUDE.md → Playwright → Locators.'
+				},
+				{
+					selector:
+						"CallExpression[callee.property.name='waitForLoadState'] > Literal[value='networkidle']",
+					message: 'networkidle is unreliable. Wait on a real signal.'
+				}
+			]
+		}
 	}
 );

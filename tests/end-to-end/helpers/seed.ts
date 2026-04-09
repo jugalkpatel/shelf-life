@@ -51,10 +51,3 @@ export const seedFreshDatabase = (request: APIRequestContext): Promise<SeedResul
  */
 export const resetShelfContent = (request: APIRequestContext): Promise<SeedResult> =>
 	postSeed(request, {});
-
-/**
- * Back-compat alias used by legacy specs that haven't been split yet. Defaults
- * to the content-only reset so existing specs don't invalidate sessions.
- * @deprecated Prefer `resetShelfContent` for individual specs.
- */
-export const seedDatabase = resetShelfContent;

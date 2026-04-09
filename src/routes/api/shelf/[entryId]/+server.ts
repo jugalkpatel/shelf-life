@@ -85,6 +85,10 @@ export const PATCH: RequestHandler = async ({ locals, params, request }) => {
 		.where(and(eq(shelfEntry.id, params.entryId), eq(shelfEntry.userId, locals.user.id)))
 		.returning();
 
+	if (!updated) {
+		error(404, 'Shelf entry not found');
+	}
+
 	return json({
 		id: updated.id,
 		status: updated.status,

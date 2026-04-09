@@ -2,7 +2,7 @@ export const shelfStatuses = ['to-read', 'reading', 'finished'] as const;
 
 export type ShelfStatus = (typeof shelfStatuses)[number];
 
-export type ShelfEntrySummary = {
+type ShelfEntrySummary = {
 	status: ShelfStatus;
 	rating: number | null;
 };
