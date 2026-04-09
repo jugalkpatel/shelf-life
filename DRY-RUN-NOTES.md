@@ -243,6 +243,39 @@ This is where Shelf grew a real testable application surface. Commit history for
 - 🛠 New `npm run dossier` script (`tsx scripts/summarize-failure-dossier.ts`).
 - 🛠 `CLAUDE.md` grows a "When a test fails" section naming `npm run dossier`, the output path, and the "don't add `console.log`" rule.
 
+## Checkpoint H — Review agents
+
+### `the-second-opinion.md`
+
+- ✅ Concept-only lesson. No shelf state claims.
+
+### `tuning-bugbot-for-your-codebase.md`
+
+- 🔧 Rewrote the sample `.cursor/BUGBOT.md` block so it names Shelf's real authorization surface: `locals.user` (not `locals.viewer`), `requireAdministrator(locals.user)` from `$lib/server/authorization` (not the old `requireViewer` / `requireAdministrator` pair), and the `src/routes/api/admin/**` scoping convention. Updated the "what to leave alone" list to name HAR fixtures and `build/` outputs and to remove the fictional `src/lib/server/application-baseline.ts`.
+
+### `lab-bugbot-on-a-planted-bug.md`
+
+- 🔧 Removed the stale "the local Shelf repository has no Git remote configured" callout. Shelf has a GitHub remote at `https://github.com/stevekinney/shelf-life.git` and the lab can now run end-to-end as a hosted lab.
+- 🔧 Rewrote the "Check out the `planted-bug/admin-feature` branch" section to describe the actual diff that branch ships (replacing `requireAdministrator(locals.user)` from `$lib/server/authorization` with a plain `if (!locals.user)` check) instead of the older `requireAdministrator(...)` / `requireViewer(...)` framing.
+
+### Shelf changes
+
+- 🛠 New `src/lib/server/authorization.ts` exposes `isAdministrator(user)` and `requireAdministrator(user)`. Administrator status is a hard-coded email allowlist (`admin@example.com`) — the lesson explains this is intentional so the starter can demonstrate permission flow without an extra database column. `requireAdministrator` is generic so it narrows the non-undefined return type back to whatever the caller passed in (necessary because `better-auth/minimal` doesn't re-export the `User` type).
+- 🛠 New `src/routes/api/admin/featured-books/+server.ts` — the admin surface Module 7 targets. Calls `requireAdministrator(locals.user)`, validates the body, and updates the new `featured_position` column on the `book` table.
+- 🛠 `src/lib/server/db/schema.ts` gains `featuredPosition: integer('featured_position')`. Applied via `drizzle-kit push --force`.
+- 🛠 New `.cursor/BUGBOT.md` — the tuned review rules from the lesson, scoped to Shelf's actual conventions.
+
+### Planted-bug branch
+
+- 🛠 Rebuilt `planted-bug/admin-feature` off the current `yet-another-dry-run` baseline. The single commit replaces `requireAdministrator(locals.user)` with a plain `if (!locals.user)` authentication check, leaving the endpoint open to any signed-in reader.
+- ✅ Verified all local gates (`typecheck`, `lint`, `test` — 12 unit + 13 e2e) still pass with the bug in place. That's the whole point: no existing test covers the non-admin-authenticated path, so only a reviewer notices.
+- 🛠 Both `yet-another-dry-run` and `planted-bug/admin-feature` pushed to `origin` (`github.com/stevekinney/shelf-life`).
+
+### ⚠️ Hard gate hit
+
+- The committee-review pre-tool hook blocked `gh pr create` from running directly — per global settings, all PRs must go through the committee-review skill. That conflicts with this specific lab's goal: the PR is a deliberately planted bug that needs **Bugbot** to be the first reviewer, not Claude's internal committee.
+- **User follow-up needed:** open the PR manually at `https://github.com/stevekinney/shelf-life/pull/new/planted-bug/admin-feature` (base: `yet-another-dry-run`, or whichever branch becomes main after the final reconciliation step), then verify Bugbot catches the planted bug. Bugbot install status on the fork is also outside this dry run's scope — recorded in the final reconciliation task #15.
+
 **Verification:**
 
 - `npm run typecheck` + `npm run lint` + `npm run test` all green.
