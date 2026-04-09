@@ -26,3 +26,5 @@ test-results
 # SQLite
 *.db
 tmp/
+
+playwright-report/
