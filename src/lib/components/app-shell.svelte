@@ -43,6 +43,7 @@
 					<a class={linkClasses('/design-system')} href={resolve('/design-system')}>
 						Design system
 					</a>
+					<a class={linkClasses('/playground')} href={resolve('/playground')}> Playground </a>
 					{#if currentUser}
 						<a class={linkClasses('/search')} href={resolve('/search')}>Search</a>
 						<a class={linkClasses('/shelf')} href={resolve('/shelf')}>Shelf</a>

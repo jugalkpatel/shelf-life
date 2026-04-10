@@ -11,6 +11,7 @@
 		| '/'
 		| '/login'
 		| '/design-system'
+		| '/playground'
 		| '/search'
 		| '/shelf'
 		| '/goals'

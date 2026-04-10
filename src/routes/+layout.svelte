@@ -12,7 +12,8 @@
 		'/login': 'Sign in | Shelf',
 		'/search': 'Search | Shelf',
 		'/shelf': 'Your shelf | Shelf',
-		'/design-system': 'Design system | Shelf'
+		'/design-system': 'Design system | Shelf',
+		'/playground': 'Locator playground | Shelf'
 	};
 
 	const title = $derived(titles[page.url.pathname as keyof typeof titles] ?? 'Shelf');
