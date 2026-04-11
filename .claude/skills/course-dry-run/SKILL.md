@@ -80,15 +80,16 @@ Therefore: the bootstrap is **serial**, exactly one worktree has an active previ
 Immediately after `git worktree add`, before any lab commands, in this exact order:
 
 1. `cp .claude/skills/course-dry-run/references/dry-run.env.template .env` inside the worktree, then replace `__DRY_RUN_SECRET__` with an `openssl rand -hex 16` value. The real secret is synthesized at copy time and never lands in version control; the template stays clean under `.gitleaks.toml`.
-2. Exclude the worktree's own nested `tmp/` via `.git/info/exclude` so `git status` stays clean.
-3. `npm ci` (not `npm install` — match lockfile semantics).
-4. `npm run prepare`.
-5. `npx drizzle-kit push --force`.
-6. `npm run build` — **required before `preview`**. Do not skip.
-7. Verify `4173` is free: `lsof -nP -iTCP:4173 -sTCP:LISTEN` must return empty. If the port is in use, hard stop — never silently race another server.
-8. Launch the preview server: `ENABLE_TEST_SEED=true npm run preview -- --host 127.0.0.1 --port 4173` in the background. Poll `GET http://127.0.0.1:4173/` for readiness with a five-attempt cap.
-9. Seed: `curl -s -X POST http://127.0.0.1:4173/api/testing/seed -H 'Content-Type: application/json' -d '{"resetUsers": true}'`.
-10. Record the server PID.
+2. `mkdir -p tmp` inside the worktree. The template's `DATABASE_URL=file:./tmp/dry-run.db` assumes the directory exists; libsql errors with `ConnectionFailed (14)` otherwise. Step 5 will fail without this.
+3. Exclude the worktree's own nested `tmp/` so `git status` stays clean. Worktrees do not have their own `.git/info/exclude` — write to `<main-repo>/.git/worktrees/<worktree-name>/info/exclude` instead (create the `info/` directory first if it does not exist).
+4. `npm ci` (not `npm install` — match lockfile semantics). Note: `npm ci` fires the `prepare` lifecycle script automatically via postinstall on this project, so step 5 below is a no-op if you just ran `npm ci`.
+5. `npm run prepare` (skip if `npm ci` already ran it in step 4).
+6. `npx drizzle-kit push --force`.
+7. `npm run build` — **required before `preview`**. Do not skip.
+8. Verify `4173` is free: `lsof -nP -iTCP:4173 -sTCP:LISTEN` must return empty. If the port is in use, hard stop — never silently race another server.
+9. Launch the preview server: `ENABLE_TEST_SEED=true npm run preview -- --host 127.0.0.1 --port 4173` in the background. Poll `GET http://127.0.0.1:4173/` for readiness with a five-attempt cap.
+10. Seed: `curl -s -X POST http://127.0.0.1:4173/api/testing/seed -H 'Content-Type: application/json' -d '{"resetUsers": true}'`.
+11. Record the server PID.
 
 **Teardown before the four gates.** Before running `npm run typecheck && npm run lint && npm run knip && npm run test`, tear down the bootstrap preview server: SIGTERM, SIGKILL after 3 seconds, verify `4173` is free again. The gates will start their own `webServer` on `4173`. Lab execution and screenshot capture use the bootstrap server; gates use Playwright's own server.
 
