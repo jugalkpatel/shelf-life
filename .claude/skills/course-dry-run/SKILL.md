@@ -18,7 +18,7 @@ At the very start of the skill, capture one `<session-slug>` of the form `YYYYMM
 
 ## The loading rule for pitfalls
 
-Read `references/pitfalls.md` before touching visual-regression baselines, CI workflow YAML, or `.husky/` scripts. Those are the three surfaces that have bitten prior runs. Do not load it speculatively.
+Read `references/pitfalls.md` before touching visual-regression baselines, CI workflow YAML, or `lefthook.yml`. Those are the three surfaces that have bitten prior runs. Do not load it speculatively.
 
 ## Phase 0 — Preflight and authorization
 

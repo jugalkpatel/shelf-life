@@ -1,0 +1,18 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: '*.{ts,svelte,js,mjs,cjs}'
+      run: npx eslint --fix --max-warnings=0 {staged_files}
+      stage_fixed: true
+    format:
+      glob: '*.{ts,svelte,js,mjs,cjs,json,md,yml,yaml,css}'
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
+    secrets:
+      run: npx tsx scripts/run-gitleaks-staged.ts
+
+pre-push:
+  commands:
+    checks:
+      run: npm run pre-push

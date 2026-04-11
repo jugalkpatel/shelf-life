@@ -364,7 +364,7 @@ orphaned files stop accumulating quietly.
 
 **What changes:**
 
-- Husky and lint-staged run checks before commits and pushes.
+- Lefthook runs checks before commits and pushes.
 
 **What this does to the app:** broken or low-signal changes are rejected before
 they even make it to a pull request.
@@ -393,7 +393,7 @@ repository with hard feedback rails.
 - [The Static Layer as Underlayment](https://stevekinney.com/courses/self-testing-ai-agents/the-static-layer-as-underlayment)
 - [Lint and Types as Guardrails](https://stevekinney.com/courses/self-testing-ai-agents/lint-and-types-as-guardrails)
 - [Dead Code Detection](https://stevekinney.com/courses/self-testing-ai-agents/dead-code-detection)
-- [Git Hooks with Husky and Lint-Staged](https://stevekinney.com/courses/self-testing-ai-agents/git-hooks-with-husky-and-lint-staged)
+- [Git Hooks with Lefthook](https://stevekinney.com/courses/self-testing-ai-agents/git-hooks-with-lefthook)
 - [Secret Scanning with Gitleaks](https://stevekinney.com/courses/self-testing-ai-agents/secret-scanning-with-gitleaks)
 - [Lab: Wire the Static Layer Into Shelf](https://stevekinney.com/courses/self-testing-ai-agents/lab-wire-the-static-layer-into-shelf)
 

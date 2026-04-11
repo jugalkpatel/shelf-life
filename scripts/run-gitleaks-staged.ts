@@ -7,8 +7,9 @@
  * files. Copying the exact index contents gives the scanner unambiguous
  * input.
  *
- * Intended to be invoked by `lint-staged` as a final secret-scan gate. Exits
- * zero when the scan is clean and non-zero when Gitleaks reports findings.
+ * Intended to be invoked by `lefthook`'s `pre-commit` `secrets` command as a
+ * final secret-scan gate. Exits zero when the scan is clean and non-zero when
+ * Gitleaks reports findings.
  */
 import { execSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';

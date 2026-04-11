@@ -79,8 +79,8 @@ Do not report a task complete with any of these failing. If a failure looks unre
 
 ## Git hooks and secrets
 
-- `husky` manages `.husky/pre-commit` (runs `lint-staged`) and `.husky/pre-push` (typecheck + knip + unit tests). Never commit with `--no-verify`.
-- `lint-staged` runs ESLint + Prettier on staged files and then a Gitleaks scan via `scripts/run-gitleaks-staged.ts`.
+- `lefthook` manages git hooks via `lefthook.yml` at the repo root. Pre-commit runs ESLint, Prettier, and a Gitleaks scan on staged files; pre-push runs typecheck + knip + unit tests via `npm run pre-push`. Never commit with `--no-verify`.
+- The pre-commit `secrets` command shells out to `scripts/run-gitleaks-staged.ts`, which materializes the staged index into a tmp directory and runs `gitleaks dir` against it — that is more reliable for newly-added files than Gitleaks' direct staged mode.
 - Never commit real secrets. `sample-config.json` and `tests/fixtures/` are deliberate bait allowlisted in `.gitleaks.toml`. Use obviously-fake placeholder values (`your_api_key_here`), not strings that pattern-match real formats.
 
 ## Do not

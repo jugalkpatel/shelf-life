@@ -1,6 +1,6 @@
 # Course dry-run pitfalls
 
-Load this file before touching visual-regression baselines, CI workflow YAML, or `.husky/` scripts. These are the recurring traps the dry-run loop has hit in prior runs.
+Load this file before touching visual-regression baselines, CI workflow YAML, or `lefthook.yml`. These are the recurring traps the dry-run loop has hit in prior runs.
 
 ## Cross-platform visual regression baselines
 
@@ -36,14 +36,6 @@ Commit both `-darwin.png` and `-linux.png` baselines side by side. If residual p
     sudo install /tmp/gitleaks /usr/local/bin/gitleaks
 - name: Secret scan
   run: gitleaks dir . --redact --config .gitleaks.toml
-```
-
-## Pre-commit hook clobbering `prepare`
-
-Running `npx husky init` will overwrite the `prepare` script in `package.json` with just `husky`. Restore `playwright install` and `svelte-kit sync` afterwards:
-
-```json
-"prepare": "husky && (playwright install || echo '') && (svelte-kit sync || echo '')"
 ```
 
 ## Course-prose framing
