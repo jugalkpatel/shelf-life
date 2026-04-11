@@ -46,7 +46,7 @@ export default defineConfig({
 		},
 		{
 			name: 'public',
-			testMatch: /(smoke|visual)\.spec\.ts/,
+			testMatch: /(smoke|visual|playground)\.spec\.ts/,
 			use: {
 				...devices['Desktop Chrome']
 			}
