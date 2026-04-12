@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -5,6 +6,7 @@ import { APIError } from 'better-auth/api';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { book, shelfEntry, user } from '$lib/server/db/schema';
+import { resolveTestSeedEnabled } from '$lib/server/environment-configuration';
 import type { RequestHandler } from './$types';
 
 /**
@@ -55,7 +57,7 @@ const SEEDED_BOOKS: Array<typeof book.$inferInsert> = [
 	}
 ];
 
-const isTestSeedEnabled = () => env.ENABLE_TEST_SEED === 'true';
+const isTestSeedEnabled = () => resolveTestSeedEnabled(env, dev);
 
 const readRequestBody = async (request: Request): Promise<SeedRequestBody> => {
 	try {

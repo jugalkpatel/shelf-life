@@ -1,4 +1,5 @@
 import { env } from '$env/dynamic/private';
+import { resolveShelfEnvironmentConfiguration } from '$lib/server/environment-configuration';
 
 export type OpenLibrarySearchResult = {
 	openLibraryId: string;
@@ -26,7 +27,9 @@ const DEFAULT_BASE_URL = 'https://openlibrary.org';
 const SEARCH_LIMIT = 10;
 const NETWORK_TIMEOUT_MS = 4000;
 
-const resolveBaseUrl = () => env.OPEN_LIBRARY_BASE_URL ?? DEFAULT_BASE_URL;
+const environmentConfiguration = resolveShelfEnvironmentConfiguration(env);
+
+const resolveBaseUrl = () => environmentConfiguration.openLibraryBaseUrl ?? DEFAULT_BASE_URL;
 
 const pickIdentifier = (doc: OpenLibraryRawDoc): string | null => {
 	if (doc.cover_edition_key) return doc.cover_edition_key;

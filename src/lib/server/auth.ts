@@ -4,10 +4,13 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
 import { db } from '$lib/server/db';
+import { resolveShelfEnvironmentConfiguration } from '$lib/server/environment-configuration';
+
+const environmentConfiguration = resolveShelfEnvironmentConfiguration(env);
 
 export const auth = betterAuth({
-	baseURL: env.ORIGIN,
-	secret: env.BETTER_AUTH_SECRET,
+	...(environmentConfiguration.authOrigin ? { baseURL: environmentConfiguration.authOrigin } : {}),
+	secret: environmentConfiguration.betterAuthSecret,
 	database: drizzleAdapter(db, { provider: 'sqlite' }),
 	emailAndPassword: { enabled: true },
 	plugins: [

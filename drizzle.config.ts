@@ -1,11 +1,12 @@
 import { defineConfig } from 'drizzle-kit';
+import { resolveShelfEnvironmentConfiguration } from './src/lib/server/environment-configuration';
 
-if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+const environmentConfiguration = resolveShelfEnvironmentConfiguration(process.env);
 
 export default defineConfig({
 	schema: './src/lib/server/db/schema.ts',
 	dialect: 'sqlite',
-	dbCredentials: { url: process.env.DATABASE_URL },
+	dbCredentials: { url: environmentConfiguration.databaseUrl },
 	verbose: true,
 	strict: true
 });
