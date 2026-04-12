@@ -1,6 +1,6 @@
 # Shelf
 
-Shelf is the starter SvelteKit application for the **Self-Testing AI Agents** course. This repository now starts from a real book-app shell instead of the generated scaffold, with a protected app surface, starter design system, Better Auth integration, and local testing foundations.
+Shelf is the starter SvelteKit application for the [**Self-Testing AI Agents**](https://stevekinney.com/courses/self-testing-ai-agents) course. This repository now starts from a real-ish shell instead of the generated scaffold, with a protected app surface, starter design system (straight from like 2004), [Better Auth](https://better-auth.com/) integration, and local testing foundations.
 
 ## Starter routes
 
@@ -16,7 +16,7 @@ This is a strong starter foundation, not the finished app.
 
 The following are intentionally deferred to later course exercises:
 
-- live Open Library search integration
+- live [Open Library](https://openlibrary.org/) search integration
 - shelf CRUD flows and persisted ratings
 - stats, goals, and admin features
 - HAR recording

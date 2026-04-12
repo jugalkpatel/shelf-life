@@ -27,4 +27,10 @@ node tools/course-dry-run/scripts/audit-course-content.mjs \
   --out-dir tmp/dry-run/<session-slug>
 ```
 
-5. Treat `manifest.json`, `validation-results.json`, and `summary.md` as the only canonical audit trail.
+5. Refresh the installed Codex mirror when this wrapper changes:
+
+```sh
+node tools/course-dry-run/install-codex-skill.mjs
+```
+
+6. Treat `manifest.json`, `validation-results.json`, and `summary.md` as the only canonical audit trail.

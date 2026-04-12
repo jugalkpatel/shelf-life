@@ -1,6 +1,6 @@
-# Course dry-run pitfalls
+# Course Dry-Run Pitfalls
 
-Load this file before touching visual-regression baselines, CI workflow YAML, or `lefthook.yml`. These are the recurring traps the dry-run loop has hit in prior runs.
+Read this file before touching visual-regression baselines, CI workflow YAML, or `lefthook.yml`.
 
 ## Cross-platform visual regression baselines
 
@@ -22,7 +22,10 @@ EOF
 '
 ```
 
-Commit both `-darwin.png` and `-linux.png` baselines side by side. If residual pixel drift remains between the Docker image and the GitHub Actions runner image, set `maxDiffPixelRatio: 0.01` in the global `toHaveScreenshot` config. Note that running `npm ci` inside the Linux container will overwrite native extensions for macOS — you'll need to `rm -rf node_modules && npm install` on the host afterwards to restore Darwin binaries.
+Commit both `-darwin.png` and `-linux.png` baselines side by side. If residual pixel drift remains between the Docker image and the GitHub Actions runner image, set `maxDiffPixelRatio: 0.01` in the global `toHaveScreenshot` config.
+
+> [!NOTE]
+> Running `npm ci` inside the Linux container overwrites native macOS extensions in `node_modules`. Restore them on the host before continuing.
 
 ## Gitleaks CI step
 
@@ -38,6 +41,11 @@ Commit both `-darwin.png` and `-linux.png` baselines side by side. If residual p
   run: gitleaks dir . --redact --config .gitleaks.toml
 ```
 
-## Course-prose framing
+## Course prose framing
 
-The published course should contain zero mentions of "dry run", "Third dry run validation", "current Shelf replay", or "validated Shelf repo". These are internal QA artifacts. Strip them inline as you find them.
+Published course prose should contain zero internal QA callouts such as:
+
+- `dry run`
+- `Third dry run validation`
+- `current Shelf replay`
+- `validated Shelf repo`
