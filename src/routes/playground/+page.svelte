@@ -22,6 +22,9 @@
 
 	let panelExpanded = $state(false);
 
+	const playgroundInputClasses =
+		'w-full appearance-none rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus:border-[var(--color-border-strong)] focus:ring-[var(--color-border-strong)]';
+
 	const handleLoadMore = () => {
 		isLoadingMore = true;
 		setTimeout(() => {
@@ -99,18 +102,14 @@
 			<Input label="ISBN" name="isbn" disabled={true} placeholder="978-0-00-000000-0" />
 
 			<div>
-				<input
-					type="text"
-					placeholder="Unlabeled field"
-					class="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-ink)]"
-				/>
+				<input type="text" placeholder="Unlabeled field" class={playgroundInputClasses} />
 			</div>
 
 			<div>
 				<input
 					type="text"
 					aria-label="Secret notes"
-					class="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-ink)]"
+					class={playgroundInputClasses}
 					placeholder="This input has an aria-label"
 				/>
 			</div>
@@ -122,12 +121,33 @@
 		title="Text content"
 		description="Exact matches, partial matches, and disambiguation"
 	>
-		<div class="space-y-3 text-sm text-[var(--color-ink)]">
-			<p>This book has been on your shelf for 42 days.</p>
-			<p>Currently reading Station Eleven by Emily St. John Mandel</p>
-			<p>3 of 12 books finished</p>
-			<p>You have 4 books on your shelf right now.</p>
-			<p>Add a book to your shelf to get started.</p>
+		<div class="grid gap-4 lg:grid-cols-3">
+			<section class="rounded-[var(--radius-control)] bg-[var(--color-surface-soft)] p-4">
+				<h3 class="text-sm font-semibold text-[var(--color-ink)]">Exact match</h3>
+				<div class="mt-3 space-y-2 text-sm text-[var(--color-ink)]">
+					<p>Station Eleven</p>
+					<p>Piranesi</p>
+					<p>Annihilation</p>
+				</div>
+			</section>
+
+			<section class="rounded-[var(--radius-control)] bg-[var(--color-surface-soft)] p-4">
+				<h3 class="text-sm font-semibold text-[var(--color-ink)]">Partial match</h3>
+				<div class="mt-3 space-y-2 text-sm text-[var(--color-ink)]">
+					<p>Currently reading Station Eleven by Emily St. John Mandel.</p>
+					<p>Station Eleven has been on your shelf for 42 days.</p>
+					<p>Add Station Eleven to your shelf to keep it handy.</p>
+				</div>
+			</section>
+
+			<section class="rounded-[var(--radius-control)] bg-[var(--color-surface-soft)] p-4">
+				<h3 class="text-sm font-semibold text-[var(--color-ink)]">Disambiguation</h3>
+				<div class="mt-3 space-y-2 text-sm text-[var(--color-ink)]">
+					<p>You have 4 books on your shelf right now.</p>
+					<p>You finished 4 books this year.</p>
+					<p>4 books are waiting for a rating.</p>
+				</div>
+			</section>
 		</div>
 	</SurfaceCard>
 

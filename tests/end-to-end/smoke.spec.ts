@@ -7,7 +7,7 @@ test('home page reads like a real public-facing reading app', async ({ page }) =
 		page.getByRole('heading', { name: /Build a shelf that remembers what you actually read/i })
 	).toBeVisible();
 	await expect(page.getByRole('main').getByRole('link', { name: 'Sign in' })).toBeVisible();
-	await expect(page.getByRole('main').getByRole('link', { name: 'Browse books' })).toBeVisible();
+	await expect(page.getByRole('main').getByRole('link', { name: 'Browse books' })).toHaveCount(0);
 	await expect(page.getByRole('navigation', { name: 'Primary' })).toContainText('Search');
 	await expect(
 		page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Design system' })
@@ -81,6 +81,62 @@ test('sign-in actions use the primary button treatment with accessible contrast'
 	}
 });
 
+test('empty-state primary actions keep readable text contrast', async ({ page }) => {
+	await page.goto('/design-system');
+
+	const emptyStateAction = page.getByRole('link', { name: 'Search for books' });
+	await expect(emptyStateAction).toBeVisible();
+
+	const buttonStyles = await emptyStateAction.evaluate((element) => {
+		const computedStyles = window.getComputedStyle(element);
+		const parseRgb = (value: string): [number, number, number] => {
+			const channels = value
+				.match(/\d+(\.\d+)?/g)
+				?.slice(0, 3)
+				.map(Number);
+			const [red, green, blue] = channels ?? [];
+
+			if (red === undefined || green === undefined || blue === undefined) {
+				throw new Error(`Could not parse color value: ${value}`);
+			}
+
+			return [red, green, blue];
+		};
+
+		const toRelativeLuminance = ([red, green, blue]: [number, number, number]) => {
+			const normalizeChannel = (channel: number) => {
+				const normalized = channel / 255;
+				return normalized <= 0.03928 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+			};
+
+			const [normalizedRed, normalizedGreen, normalizedBlue] = [
+				normalizeChannel(red),
+				normalizeChannel(green),
+				normalizeChannel(blue)
+			];
+
+			return normalizedRed * 0.2126 + normalizedGreen * 0.7152 + normalizedBlue * 0.0722;
+		};
+
+		const foregroundColor = parseRgb(computedStyles.color);
+		const backgroundColor = parseRgb(computedStyles.backgroundColor);
+		const foregroundLuminance = toRelativeLuminance(foregroundColor);
+		const backgroundLuminance = toRelativeLuminance(backgroundColor);
+		const lighterLuminance = Math.max(foregroundLuminance, backgroundLuminance);
+		const darkerLuminance = Math.min(foregroundLuminance, backgroundLuminance);
+
+		return {
+			backgroundColor: computedStyles.backgroundColor,
+			color: computedStyles.color,
+			contrastRatio: (lighterLuminance + 0.05) / (darkerLuminance + 0.05)
+		};
+	});
+
+	expect(buttonStyles.color).toBe('rgb(255, 253, 248)');
+	expect(buttonStyles.backgroundColor).toBe('rgb(106, 75, 31)');
+	expect(buttonStyles.contrastRatio).toBeGreaterThanOrEqual(4.5);
+});
+
 test('protected routes redirect unauthenticated readers to login', async ({ page }) => {
 	await page.goto('/search');
 	await expect(page).toHaveURL(/\/login\?returnTo=%2Fsearch$/);
@@ -89,9 +145,10 @@ test('protected routes redirect unauthenticated readers to login', async ({ page
 	await expect(page).toHaveURL(/\/login\?returnTo=%2Fshelf$/);
 });
 
-test('login page renders starter authentication controls', async ({ page }) => {
+test('login page renders account access controls', async ({ page }) => {
 	await page.goto('/login');
 
+	await expect(page.getByRole('heading', { name: 'Sign in to Shelf.' })).toBeVisible();
 	await expect(page.getByLabel('Email')).toBeVisible();
 	await expect(page.getByLabel('Password')).toBeVisible();
 	await expect(page.getByLabel('Display name')).toBeVisible();

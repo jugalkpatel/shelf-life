@@ -14,24 +14,24 @@
 		<PageHeader
 			eyebrow="Welcome back"
 			title="Sign in to Shelf."
-			description="Use your email and password to open your shelf, search for books, and keep your reading goal moving."
+			description="Pick up where you left off. Sign in to update your shelf, log finished books, and keep your reading goal moving."
 		/>
 
 		<SurfaceCard
-			title="Everything tied to your account"
-			description="Shelf keeps your reading history attached to you, not the browser you happened to be using."
+			title="Your reading history lives here"
+			description="Shelf keeps your to-read list, finished books, ratings, and yearly goal in one place."
 		>
 			<ul class="space-y-3 text-sm text-[var(--color-muted)]">
-				<li>Keep your shelf, reading status, and ratings in sync.</li>
+				<li>Keep your shelf and reading progress in sync.</li>
 				<li>Create an account without leaving this screen.</li>
-				<li>Return to the page you originally wanted after signing in.</li>
+				<li>Return to the page you originally wanted after you sign in.</li>
 			</ul>
 		</SurfaceCard>
 	</div>
 
 	<SurfaceCard
 		title="Email and password"
-		description="Sign in with an existing account, or register a new one with the same form."
+		description="Sign in with an existing account, or create one to start tracking your reading."
 	>
 		<form class="space-y-5" method="POST" action="?/signInEmail" use:enhance>
 			<input type="hidden" name="returnTo" value={data.returnTo} />
@@ -41,7 +41,7 @@
 				type="email"
 				autocomplete="email"
 				required
-				hint="Use the address you want attached to your shelf and reading history."
+				hint="Use the email address you want to sign in with."
 			/>
 			<Input
 				label="Password"
@@ -54,7 +54,7 @@
 				label="Display name"
 				name="name"
 				autocomplete="name"
-				hint="This is used when creating a new account."
+				hint="Only needed if you are creating a new account."
 			/>
 
 			{#if form?.message}

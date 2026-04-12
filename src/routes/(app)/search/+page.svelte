@@ -99,7 +99,7 @@
 				</p>
 			</div>
 
-			<ul class="grid gap-5 lg:grid-cols-2">
+			<ul class="space-y-5">
 				{#each data.results as result (result.openLibraryId)}
 					<li>
 						<article

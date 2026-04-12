@@ -58,10 +58,8 @@
 			<div class="flex flex-wrap gap-3">
 				{#if data.user}
 					<Button href="/shelf">Open your shelf</Button>
-					<Button href="/search" kind="secondary">Find a book</Button>
 				{:else}
 					<Button href="/login">Sign in</Button>
-					<Button href="/search" kind="secondary">Browse books</Button>
 				{/if}
 			</div>
 		{/snippet}

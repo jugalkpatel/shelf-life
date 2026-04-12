@@ -61,6 +61,41 @@ Start the development server:
 npm run dev
 ```
 
+## Open the database in Drizzle Studio
+
+If you want to inspect the local SQLite database in a browser, Drizzle Studio is the quickest way to do it.
+
+Make sure the schema exists first:
+
+```sh
+npm run db:push
+```
+
+Start Drizzle Studio:
+
+```sh
+npm run db:studio
+```
+
+Drizzle Studio will print a local URL in the terminal. Open that URL in your browser, then use the `user` table to inspect or edit reader accounts.
+
+## Promote a reader to administrator
+
+**How administrator access works today:** Shelf does not have a `role` column yet. Administrator access is granted by a hard-coded email allowlist in `src/lib/server/authorization.ts`.
+
+To promote a local account:
+
+- Create the account through `/login` first if it does not exist yet.
+- Open Drizzle Studio with `npm run db:studio`.
+- Open the `user` table.
+- Find the row for the account you want to promote.
+- Change the `email` value to `admin@example.com`.
+- Save the row.
+- Sign out, then sign back in with `admin@example.com` and the same password.
+
+> [!WARNING]
+> Use the exact email address `admin@example.com`. That is the only administrator email recognized by the starter right now.
+
 ## Verification commands
 
 Run these before considering a change complete:

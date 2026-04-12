@@ -49,14 +49,16 @@
 			.filter(Boolean)
 			.join(' ')
 	);
+
+	const style = $derived(kind === 'primary' ? 'color: var(--color-surface);' : undefined);
 </script>
 
 {#if href}
-	<a class={classes} href={resolve(href)} aria-disabled={disabled}>
+	<a class={classes} href={resolve(href)} aria-disabled={disabled} {style}>
 		{@render children?.()}
 	</a>
 {:else}
-	<button class={classes} {type} {disabled} {formaction} {onclick}>
+	<button class={classes} {style} {type} {disabled} {formaction} {onclick}>
 		{@render children?.()}
 	</button>
 {/if}
