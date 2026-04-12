@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { resolve } from '$app/paths';
 	import Button from '$lib/components/button.svelte';
 	import Input from '$lib/components/input.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
@@ -7,15 +8,29 @@
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
+
+	const isCreateAccountMode = $derived(data.mode === 'create-account');
+	const pageEyebrow = $derived(isCreateAccountMode ? 'New here?' : 'Welcome back');
+	const pageTitle = $derived(
+		isCreateAccountMode ? 'Create your Shelf account.' : 'Sign in to Shelf.'
+	);
+	const pageDescription = $derived(
+		isCreateAccountMode
+			? 'Create an account to start building your shelf, tracking finished books, and setting your yearly reading goal.'
+			: 'Pick up where you left off. Sign in to update your shelf, log finished books, and keep your reading goal moving.'
+	);
+	const formTitle = $derived(isCreateAccountMode ? 'Create account' : 'Email and password');
+	const formDescription = $derived(
+		isCreateAccountMode
+			? 'Start with your email and password, then choose the display name that will appear on your shelf.'
+			: 'Sign in with your existing Shelf account.'
+	);
+	const submitButtonLabel = $derived(isCreateAccountMode ? 'Create account' : 'Sign in');
 </script>
 
 <div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
 	<div class="space-y-4">
-		<PageHeader
-			eyebrow="Welcome back"
-			title="Sign in to Shelf."
-			description="Pick up where you left off. Sign in to update your shelf, log finished books, and keep your reading goal moving."
-		/>
+		<PageHeader eyebrow={pageEyebrow} title={pageTitle} description={pageDescription} />
 
 		<SurfaceCard
 			title="Your reading history lives here"
@@ -29,11 +44,13 @@
 		</SurfaceCard>
 	</div>
 
-	<SurfaceCard
-		title="Email and password"
-		description="Sign in with an existing account, or create one to start tracking your reading."
-	>
-		<form class="space-y-5" method="POST" action="?/signInEmail" use:enhance>
+	<SurfaceCard title={formTitle} description={formDescription}>
+		<form
+			class="space-y-5"
+			method="POST"
+			action={isCreateAccountMode ? '?/signUpEmail' : '?/signInEmail'}
+			use:enhance
+		>
 			<input type="hidden" name="returnTo" value={data.returnTo} />
 			<Input
 				label="Email"
@@ -47,15 +64,17 @@
 				label="Password"
 				name="password"
 				type="password"
-				autocomplete="current-password"
+				autocomplete={isCreateAccountMode ? 'new-password' : 'current-password'}
 				required
 			/>
-			<Input
-				label="Display name"
-				name="name"
-				autocomplete="name"
-				hint="Only needed if you are creating a new account."
-			/>
+			{#if isCreateAccountMode}
+				<Input
+					label="Display name"
+					name="name"
+					autocomplete="name"
+					hint="This is what readers will see on your shelf."
+				/>
+			{/if}
 
 			{#if form?.message}
 				<p class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -63,9 +82,23 @@
 				</p>
 			{/if}
 
-			<div class="flex flex-wrap gap-3">
-				<Button type="submit">Sign in</Button>
-				<Button type="submit" kind="secondary" formaction="?/signUpEmail">Create account</Button>
+			<div class="flex flex-wrap items-center gap-4">
+				<Button type="submit">{submitButtonLabel}</Button>
+				{#if isCreateAccountMode}
+					<a
+						href={resolve(data.signInPath)}
+						class="text-sm font-medium text-[var(--color-muted)] underline-offset-4 transition hover:text-[var(--color-ink)] hover:underline"
+					>
+						Already have an account? Sign in instead.
+					</a>
+				{:else}
+					<a
+						href={resolve(data.createAccountPath)}
+						class="text-sm font-medium text-[var(--color-muted)] underline-offset-4 transition hover:text-[var(--color-ink)] hover:underline"
+					>
+						Need an account? Create one instead.
+					</a>
+				{/if}
 			</div>
 		</form>
 	</SurfaceCard>

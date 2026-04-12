@@ -1,9 +1,9 @@
 <script lang="ts">
+	import BookCard from '$lib/components/book-card.svelte';
 	import Button from '$lib/components/button.svelte';
 	import PageHeader from '$lib/components/page-header.svelte';
 	import SurfaceCard from '$lib/components/surface-card.svelte';
 	import { featuredBooks } from '$lib/sample-books';
-	import { shelfStatusLabels } from '$lib/shelf';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -121,33 +121,7 @@
 
 		<div class="grid gap-5 lg:grid-cols-3">
 			{#each featuredBooks as book (book.id)}
-				<SurfaceCard
-					title={book.title}
-					description={book.description}
-					padding="tight"
-					className="h-full"
-				>
-					<div class="flex items-start justify-between gap-3">
-						<p class="text-sm font-medium text-[var(--color-ink)]">{book.author}</p>
-						{#if book.status}
-							<span
-								class="rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-[var(--color-accent-strong)] uppercase"
-							>
-								{shelfStatusLabels[book.status]}
-							</span>
-						{/if}
-					</div>
-					<div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-[var(--color-muted)]">
-						<span>Open Library: {book.openLibraryId}</span>
-						{#if book.rating !== null && book.rating !== undefined}
-							<span
-								class="rounded-full bg-[var(--color-surface-soft)] px-3 py-1 font-semibold text-[var(--color-ink)]"
-							>
-								Rated {book.rating}/5
-							</span>
-						{/if}
-					</div>
-				</SurfaceCard>
+				<BookCard {book} />
 			{/each}
 		</div>
 	</section>

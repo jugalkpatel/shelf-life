@@ -8,7 +8,7 @@ export type StarterBook = {
 	rating?: number | null;
 };
 
-const starterBooks: StarterBook[] = [
+const searchableStarterBooks: StarterBook[] = [
 	{
 		id: 'station-eleven',
 		openLibraryId: 'OL26431919M',
@@ -40,16 +40,47 @@ const starterBooks: StarterBook[] = [
 	}
 ];
 
-export const featuredBooks = starterBooks.slice(0, 3);
+export const featuredBooks: StarterBook[] = [
+	{
+		id: 'welcome-to-dead-house',
+		openLibraryId: 'OL3282715M',
+		title: 'Welcome to Dead House',
+		author: 'R. L. Stine',
+		description:
+			'A family moves into a town where every house feels wrong and every neighbor seems just a little too friendly.',
+		status: 'reading',
+		rating: 4
+	},
+	{
+		id: 'the-invasion',
+		openLibraryId: 'OL24959144M',
+		title: 'The Invasion',
+		author: 'K. A. Applegate',
+		description:
+			'Five friends stumble into a secret alien war and learn that Earth has already been infiltrated.',
+		status: 'to-read',
+		rating: null
+	},
+	{
+		id: 'the-sun-also-rises',
+		openLibraryId: 'OL9274797M',
+		title: 'The Sun Also Rises',
+		author: 'Ernest Hemingway',
+		description:
+			'A restless circle of expatriates move from Paris to Pamplona in a novel about love, drift, and bravado.',
+		status: 'finished',
+		rating: 5
+	}
+];
 
 export const searchStarterBooks = (query: string) => {
 	const normalizedQuery = query.trim().toLowerCase();
 
 	if (!normalizedQuery) {
-		return starterBooks.slice();
+		return searchableStarterBooks.slice();
 	}
 
-	return starterBooks.filter((book) => {
+	return searchableStarterBooks.filter((book) => {
 		return [book.title, book.author, book.openLibraryId].some((value) =>
 			value.toLowerCase().includes(normalizedQuery)
 		);

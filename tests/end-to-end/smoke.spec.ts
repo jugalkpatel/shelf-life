@@ -17,6 +17,45 @@ test('home page reads like a real public-facing reading app', async ({ page }) =
 	).toHaveCount(0);
 });
 
+test('featured book cards keep their author and footer rows aligned', async ({ page }) => {
+	await page.goto('/');
+
+	const featuredCards = page.getByRole('article');
+	await expect(featuredCards).toHaveCount(3);
+
+	const layoutMetrics = await featuredCards.evaluateAll((cards) => {
+		return cards.map((card) => {
+			const cardRect = card.getBoundingClientRect();
+			const metadataRow = card.querySelector('[data-book-card-meta]');
+			const footerRow = card.querySelector('[data-book-card-footer]');
+
+			if (!(metadataRow instanceof HTMLElement) || !(footerRow instanceof HTMLElement)) {
+				throw new Error('Expected featured card metadata and footer rows to exist.');
+			}
+
+			const metadataRect = metadataRow.getBoundingClientRect();
+			const footerRect = footerRow.getBoundingClientRect();
+
+			return {
+				height: cardRect.height,
+				metadataTop: metadataRect.top - cardRect.top,
+				footerTop: footerRect.top - cardRect.top
+			};
+		});
+	});
+
+	const heights = layoutMetrics.map((metric) => metric.height);
+	const metadataOffsets = layoutMetrics.map((metric) => metric.metadataTop);
+	const footerOffsets = layoutMetrics.map((metric) => metric.footerTop);
+	const tolerance = 4;
+
+	expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(tolerance);
+	expect(Math.max(...metadataOffsets) - Math.min(...metadataOffsets)).toBeLessThanOrEqual(
+		tolerance
+	);
+	expect(Math.max(...footerOffsets) - Math.min(...footerOffsets)).toBeLessThanOrEqual(tolerance);
+});
+
 test('sign-in actions use the primary button treatment with accessible contrast', async ({
 	page
 }) => {
@@ -75,7 +114,7 @@ test('sign-in actions use the primary button treatment with accessible contrast'
 			};
 		});
 
-		expect(buttonStyles.color).toBe('rgb(255, 255, 255)');
+		expect(buttonStyles.color).toBe('rgb(255, 253, 248)');
 		expect(buttonStyles.backgroundColor).toBe('rgb(106, 75, 31)');
 		expect(buttonStyles.contrastRatio).toBeGreaterThanOrEqual(4.5);
 	}
@@ -145,14 +184,22 @@ test('protected routes redirect unauthenticated readers to login', async ({ page
 	await expect(page).toHaveURL(/\/login\?returnTo=%2Fshelf$/);
 });
 
-test('login page renders account access controls', async ({ page }) => {
+test('login page defaults to sign-in mode and only asks for a display name during account creation', async ({
+	page
+}) => {
 	await page.goto('/login');
 
 	await expect(page.getByRole('heading', { name: 'Sign in to Shelf.' })).toBeVisible();
 	await expect(page.getByLabel('Email')).toBeVisible();
 	await expect(page.getByLabel('Password')).toBeVisible();
-	await expect(page.getByLabel('Display name')).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
+	await expect(page.getByLabel('Display name')).toHaveCount(0);
+
+	await page.getByRole('link', { name: 'Need an account? Create one instead.' }).click();
+
+	await expect(page).toHaveURL(/\/login\?mode=create-account$/);
+	await expect(page.getByRole('heading', { name: 'Create your Shelf account.' })).toBeVisible();
+	await expect(page.getByLabel('Display name')).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Create account' })).toBeVisible();
 });
 
@@ -196,6 +243,11 @@ test('creating an account returns the reader to the protected page they asked fo
 
 	await page.goto('/search?query=piranesi');
 	await expect(page).toHaveURL(/\/login\?returnTo=%2Fsearch%3Fquery%3Dpiranesi$/);
+
+	await page.getByRole('link', { name: 'Need an account? Create one instead.' }).click();
+	await expect(page).toHaveURL(
+		/\/login\?mode=create-account&returnTo=%2Fsearch%3Fquery%3Dpiranesi$/
+	);
 
 	await page.getByLabel('Email').fill(`reader-${uniqueIdentifier}@example.com`);
 	await page.getByLabel('Password').fill('ShelfStarter123!');

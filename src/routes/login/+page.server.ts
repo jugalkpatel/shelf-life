@@ -8,15 +8,39 @@ import {
 import { auth } from '$lib/server/auth';
 import type { Actions, PageServerLoad } from './$types';
 
+type AuthenticationMode = 'sign-in' | 'create-account';
+
+const resolveAuthenticationMode = (value: string | null): AuthenticationMode =>
+	value === 'create-account' ? 'create-account' : 'sign-in';
+
+const createAuthenticationModePath = (mode: AuthenticationMode, returnToPath: string) => {
+	const searchParams = new URLSearchParams();
+
+	if (mode === 'create-account') {
+		searchParams.set('mode', mode);
+	}
+
+	if (returnToPath !== defaultAuthenticatedPath) {
+		searchParams.set('returnTo', returnToPath);
+	}
+
+	const queryString = searchParams.toString();
+	return queryString ? `/login?${queryString}` : '/login';
+};
+
 export const load: PageServerLoad = async ({ locals, url }) => {
 	const returnToPath = resolveAuthenticatedPath(url.searchParams.get('returnTo'));
+	const mode = resolveAuthenticationMode(url.searchParams.get('mode'));
 
 	if (locals.user) {
 		throw redirect(303, returnToPath);
 	}
 
 	return {
-		returnTo: returnToPath
+		returnTo: returnToPath,
+		mode,
+		signInPath: createAuthenticationModePath('sign-in', returnToPath),
+		createAccountPath: createAuthenticationModePath('create-account', returnToPath)
 	};
 };
 
