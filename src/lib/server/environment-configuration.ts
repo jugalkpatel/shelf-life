@@ -1,6 +1,6 @@
 type EnvironmentVariables = Record<string, string | undefined>;
 
-export type EnvironmentConfiguration = {
+type EnvironmentConfiguration = {
 	authOrigin?: string;
 	betterAuthSecret: string;
 	databaseUrl: string;
