@@ -1,4 +1,0 @@
-interface:
-  display_name: 'Course Dry-Run'
-  short_description: 'Validate or publish the Self-Testing AI Agents course'
-  default_prompt: 'Use $course-dry-run to validate the Self-Testing AI Agents course against the current shelf-life starter. Build the manifest from index.toml, execute the labs that can run locally, validate lesson, lab, and solution snippets, audit code coverage, success visibility, and reader friction, write manifest.json, validation-results.json, and summary.md under tmp/dry-run/<session-slug>/, and stop before mutating main unless I explicitly ask you to publish or reconcile main.'

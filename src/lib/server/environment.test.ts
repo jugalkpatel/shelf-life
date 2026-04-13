@@ -3,13 +3,13 @@ import {
 	DEFAULT_BETTER_AUTH_SECRET,
 	DEFAULT_DATABASE_URL,
 	DEFAULT_OPEN_LIBRARY_BASE_URL,
-	resolveShelfEnvironmentConfiguration,
-	resolveTestSeedEnabled
-} from './environment-configuration';
+	getEnvironmentVariables,
+	isTestSeedEnabled
+} from './environment';
 
 describe('resolveShelfEnvironmentConfiguration', () => {
 	it('uses local development defaults when environment variables are missing', () => {
-		expect(resolveShelfEnvironmentConfiguration({})).toEqual({
+		expect(getEnvironmentVariables({})).toEqual({
 			authOrigin: undefined,
 			betterAuthSecret: DEFAULT_BETTER_AUTH_SECRET,
 			databaseUrl: DEFAULT_DATABASE_URL,
@@ -19,7 +19,7 @@ describe('resolveShelfEnvironmentConfiguration', () => {
 
 	it('treats blank strings as missing values', () => {
 		expect(
-			resolveShelfEnvironmentConfiguration({
+			getEnvironmentVariables({
 				ORIGIN: '   ',
 				BETTER_AUTH_SECRET: '   ',
 				DATABASE_URL: '   ',
@@ -35,7 +35,7 @@ describe('resolveShelfEnvironmentConfiguration', () => {
 
 	it('keeps explicit environment values intact', () => {
 		expect(
-			resolveShelfEnvironmentConfiguration({
+			getEnvironmentVariables({
 				ORIGIN: 'http://127.0.0.1:4173',
 				BETTER_AUTH_SECRET: 'custom-secret-value-with-enough-length-12345',
 				DATABASE_URL: 'file:./tmp/test.db',
@@ -52,12 +52,12 @@ describe('resolveShelfEnvironmentConfiguration', () => {
 
 describe('resolveTestSeedEnabled', () => {
 	it('defaults to development mode when the variable is missing', () => {
-		expect(resolveTestSeedEnabled({}, true)).toBe(true);
-		expect(resolveTestSeedEnabled({}, false)).toBe(false);
+		expect(isTestSeedEnabled({}, true)).toBe(true);
+		expect(isTestSeedEnabled({}, false)).toBe(false);
 	});
 
 	it('accepts explicit true and false values', () => {
-		expect(resolveTestSeedEnabled({ ENABLE_TEST_SEED: 'true' }, false)).toBe(true);
-		expect(resolveTestSeedEnabled({ ENABLE_TEST_SEED: 'FALSE' }, true)).toBe(false);
+		expect(isTestSeedEnabled({ ENABLE_TEST_SEED: 'true' }, false)).toBe(true);
+		expect(isTestSeedEnabled({ ENABLE_TEST_SEED: 'FALSE' }, true)).toBe(false);
 	});
 });

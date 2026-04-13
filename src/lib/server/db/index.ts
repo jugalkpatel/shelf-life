@@ -1,12 +1,12 @@
+import { env } from '$env/dynamic/private';
+import { getEnvironmentVariables } from '$lib/server/environment';
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
 import { mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { drizzle } from 'drizzle-orm/libsql';
-import { createClient } from '@libsql/client';
 import * as schema from './schema';
-import { env } from '$env/dynamic/private';
-import { resolveShelfEnvironmentConfiguration } from '$lib/server/environment-configuration';
 
-const environmentConfiguration = resolveShelfEnvironmentConfiguration(env);
+const environmentConfiguration = getEnvironmentVariables(env);
 
 const ensureLocalDatabaseDirectoryExists = (databaseUrl: string) => {
 	if (!databaseUrl.startsWith('file:')) {

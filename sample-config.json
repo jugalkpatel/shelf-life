@@ -1,7 +1,0 @@
-{
-	"note": "Deliberately-fake credentials. Allowlisted in .gitleaks.toml so the scanner can demonstrate suppressions. Never paste real values here.",
-	"openLibrary": {
-		"baseUrl": "https://openlibrary.org"
-	},
-	"awsFakeExample": "AKIAIOSFODNN7EXAMPLE"
-}

@@ -24,8 +24,10 @@ export const requireAdministrator = <T extends AuthenticatedUser>(user: T | unde
 	if (!user) {
 		error(401, 'Authentication required');
 	}
+
 	if (!isAdministrator(user)) {
 		error(403, 'Administrator privilege required');
 	}
+
 	return user;
 };

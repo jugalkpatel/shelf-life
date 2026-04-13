@@ -1,27 +1,30 @@
 # Shelf
 
-Shelf is the starter SvelteKit application for the [**Self-Testing AI Agents**](https://stevekinney.com/courses/self-testing-ai-agents) course. This repository now starts from a real-ish shell instead of the generated scaffold, with a protected app surface, starter design system (straight from like 2004), [Better Auth](https://better-auth.com/) integration, and local testing foundations.
+Shelf is the starter SvelteKit application for the [**Self-Testing AI Agents**](https://stevekinney.com/courses/self-testing-ai-agents) course. The repository is intentionally small on day one: a working app shell, a few protected routes, and a tiny Playwright smoke loop that later lessons expand.
 
 ## Starter routes
 
 - `/`: public home page
 - `/login`: app-native email and password authentication
-- `/search`: protected starter search surface backed by local placeholder data
-- `/shelf`: protected shelf shell with starter summary and empty states
-- `/design-system`: component gallery and visual-regression target
+- `/search`: protected starter search surface
+- `/shelf`: protected shelf shell
+- `/design-system`: component gallery for later UI exercises
+- `/playground`: locator-practice page used later in the course
 
 ## What is intentionally not built yet
 
-This is a strong starter foundation, not the finished app.
-
-The following are intentionally deferred to later course exercises:
+This starter is meant to grow with the course. These pieces are added later:
 
 - live [Open Library](https://openlibrary.org/) search integration
 - shelf CRUD flows and persisted ratings
 - stats, goals, and admin features
-- HAR recording
 - storage-state auth for Playwright
+- HAR recording
+- accessibility automation
+- visual regression
+- performance budgets
 - failure dossiers
+- static-layer extras like hooks, secret scanning, and dead-code checks
 - CI wiring
 - custom verification MCP tools
 
@@ -106,10 +109,9 @@ npm run lint
 npm run test
 ```
 
-If you only need one layer:
+If you only need the browser layer:
 
 ```sh
-npm run test:unit
 npm run test:e2e
 ```
 
@@ -117,9 +119,5 @@ npm run test:e2e
 
 - Unit tests run with Vitest.
 - End-to-end tests run with Playwright from `tests/end-to-end`.
-- End-to-end tests provision the local SQLite schema with `npm run db:push` before launching Playwright.
-- The initial screenshot baseline lives in the Playwright snapshot output for `/design-system`.
-
-## Project direction
-
-See [ROADMAP.md](./ROADMAP.md) for the phase-by-phase evolution of Shelf across the course materials.
+- The default Playwright suite is intentionally small and only covers public starter routes.
+- Later course labs add the larger Playwright setup, extra scripts, and the stricter verification loop.

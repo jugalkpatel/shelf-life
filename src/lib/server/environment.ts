@@ -21,7 +21,7 @@ const readEnvironmentString = (value: string | undefined): string | undefined =>
  * Resolves the environment-backed settings Shelf needs at runtime, applying
  * course-friendly local defaults whenever `.env` is missing or incomplete.
  */
-export const resolveShelfEnvironmentConfiguration = (
+export const getEnvironmentVariables = (
 	environmentVariables: EnvironmentVariables
 ): EnvironmentConfiguration => {
 	const authOrigin = readEnvironmentString(environmentVariables.ORIGIN);
@@ -41,7 +41,7 @@ export const resolveShelfEnvironmentConfiguration = (
  * Enables the test seeding endpoint by default during local development while
  * staying closed unless explicitly enabled in non-development environments.
  */
-export const resolveTestSeedEnabled = (
+export const isTestSeedEnabled = (
 	environmentVariables: EnvironmentVariables,
 	developmentMode: boolean
 ): boolean => {

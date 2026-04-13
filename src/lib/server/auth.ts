@@ -1,12 +1,12 @@
-import { betterAuth } from 'better-auth/minimal';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { sveltekitCookies } from 'better-auth/svelte-kit';
-import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
+import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db';
-import { resolveShelfEnvironmentConfiguration } from '$lib/server/environment-configuration';
+import { getEnvironmentVariables } from '$lib/server/environment';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { betterAuth } from 'better-auth/minimal';
+import { sveltekitCookies } from 'better-auth/svelte-kit';
 
-const environmentConfiguration = resolveShelfEnvironmentConfiguration(env);
+const environmentConfiguration = getEnvironmentVariables(env);
 
 export const auth = betterAuth({
 	...(environmentConfiguration.authOrigin ? { baseURL: environmentConfiguration.authOrigin } : {}),

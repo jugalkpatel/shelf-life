@@ -1,9 +1,0 @@
-{
-	"build": {
-		"maxTotalGzipKilobytes": 110,
-		"maxLargestChunkGzipKilobytes": 55
-	},
-	"runtime": {
-		"shelfRouteDomContentLoadedMilliseconds": 800
-	}
-}
