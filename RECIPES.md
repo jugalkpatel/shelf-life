@@ -4,16 +4,16 @@ This checklist is intentionally exhaustive for the current Shelf application. It
 
 Use this legend:
 
-- `[x]` already covered by a committed Playwright spec
+- `[ ]` already covered by a committed Playwright spec
 - `[ ]` not covered yet, or not covered completely enough
 
 ## Suite Foundations And Fixtures
 
-- [x] Seed a stable authenticated reader session and persist storage state for the main authenticated project.
-- [x] Seed a stable authenticated administrator session and persist storage state for the administrator lab project.
-- [x] Replay Open Library search results from a HAR fixture so search tests do not depend on the live network.
-- [x] Reset shelf content through the testing seed endpoint before mutation-heavy specs.
-- [x] Capture browser console errors, page errors, and failed requests through the shared fixture layer.
+- [ ] Seed a stable authenticated reader session and persist storage state for the main authenticated project.
+- [ ] Seed a stable authenticated administrator session and persist storage state for the administrator lab project.
+- [ ] Replay Open Library search results from a HAR fixture so search tests do not depend on the live network.
+- [ ] Reset shelf content through the testing seed endpoint before mutation-heavy specs.
+- [ ] Capture browser console errors, page errors, and failed requests through the shared fixture layer.
 - [ ] Add an anonymous-only project with no stored session so redirect behavior can be asserted without hand-rolled setup.
 - [ ] Add a second non-admin reader fixture so cross-user authorization and isolation can be tested directly.
 - [ ] Add a helper that seeds a completely empty shelf for empty-state specs without deleting records inline in each test.
@@ -47,9 +47,9 @@ Use this legend:
 
 ## Public Shell And Home Page
 
-- [x] Public homepage reads like a real application and does not advertise design-system or playground routes in the primary navigation.
-- [x] Public homepage hero shows a visible `Sign in` call to action in the main content area.
-- [x] Header `Sign in` button uses accessible foreground and background contrast.
+- [ ] Public homepage reads like a real application and does not advertise design-system or playground routes in the primary navigation.
+- [ ] Public homepage hero shows a visible `Sign in` call to action in the main content area.
+- [ ] Header `Sign in` button uses accessible foreground and background contrast.
 - [ ] Header `Sign in` button navigates to `/login`.
 - [ ] Hero `Sign in` button navigates to `/login`.
 - [ ] Signed-out primary navigation exposes the expected public links and nothing else.
@@ -86,10 +86,10 @@ Use this legend:
 
 ## Authentication And Redirect Safety
 
-- [x] Anonymous visitor hitting `/search` is redirected to `/login?returnTo=%2Fsearch`.
-- [x] Anonymous visitor hitting `/shelf` is redirected to `/login?returnTo=%2Fshelf`.
-- [x] Creating an account from a protected route returns the reader to the originally requested destination.
-- [x] Login page renders the expected email, password, display-name, sign-in, and create-account controls.
+- [ ] Anonymous visitor hitting `/search` is redirected to `/login?returnTo=%2Fsearch`.
+- [ ] Anonymous visitor hitting `/shelf` is redirected to `/login?returnTo=%2Fshelf`.
+- [ ] Creating an account from a protected route returns the reader to the originally requested destination.
+- [ ] Login page renders the expected email, password, display-name, sign-in, and create-account controls.
 - [ ] Anonymous visitor hitting `/goals` is redirected to `/login?returnTo=%2Fgoals`.
 - [ ] Anonymous visitor hitting `/admin/goals` is redirected to `/login?returnTo=%2Fadmin%2Fgoals`.
 - [ ] Already-authenticated reader visiting `/login` is redirected to `/shelf`.
@@ -137,8 +137,8 @@ Use this legend:
 
 ## Search Page
 
-- [x] HAR-backed search for `station eleven` renders Station Eleven with the expected author metadata.
-- [x] Adding a search result through the UI sends the expected `POST /api/shelf` request and announces success.
+- [ ] HAR-backed search for `station eleven` renders Station Eleven with the expected author metadata.
+- [ ] Adding a search result through the UI sends the expected `POST /api/shelf` request and announces success.
 - [ ] Search page with no query shows the instructional empty state instead of stale results.
 - [ ] Search page with a query that yields no matches shows the no-results empty state.
 - [ ] Search count uses correct singular grammar for one result.
@@ -182,9 +182,9 @@ Use this legend:
 
 ## Shelf Page
 
-- [x] Reader can rate Station Eleven and the saved rating persists through the API.
-- [x] Reader can mark Piranesi as read and the saved status persists through the API.
-- [x] Reader can remove Piranesi from the shelf and the deletion persists through the API.
+- [ ] Reader can rate Station Eleven and the saved rating persists through the API.
+- [ ] Reader can mark Piranesi as read and the saved status persists through the API.
+- [ ] Reader can remove Piranesi from the shelf and the deletion persists through the API.
 - [ ] Empty shelf renders the empty-state heading, body copy, and `Open search` call to action.
 - [ ] Empty-shelf `Open search` call to action navigates to `/search`.
 - [ ] Shelf heading uses the reader's possessive name, such as `Steve Kinney's shelf`.
@@ -386,8 +386,8 @@ Use this legend:
 
 ## Design System Route
 
-- [x] Design-system page matches the full-page visual baseline.
-- [x] Empty-state primary action keeps readable contrast.
+- [ ] Design-system page matches the full-page visual baseline.
+- [ ] Empty-state primary action keeps readable contrast.
 - [ ] Design-system route has no automated accessibility violations.
 - [ ] Design-system route has no unexpected console errors.
 - [ ] Design-system route still renders correctly after a hard reload with no hydration mismatches.
@@ -409,8 +409,8 @@ Use this legend:
 
 ## Locator Playground Route
 
-- [x] Locator playground renders every major practice section heading.
-- [x] Locator playground keeps the reading-list item count and ratings-table row count expected by the current lab spec.
+- [ ] Locator playground renders every major practice section heading.
+- [ ] Locator playground keeps the reading-list item count and ratings-table row count expected by the current lab spec.
 - [ ] Buttons section exposes distinct roles, names, and visual states for each example control.
 - [ ] Buttons section keeps the duplicate `Delete` buttons intentionally ambiguous so scoped locators are still required.
 - [ ] Buttons section keeps the disabled `Out of stock` button non-interactive.
@@ -471,8 +471,8 @@ Use this legend:
 
 ## Accessibility Coverage
 
-- [x] Shelf page has no automated axe violations for WCAG 2 A and AA rules.
-- [x] Search page has no automated axe violations for WCAG 2 A and AA rules.
+- [ ] Shelf page has no automated axe violations for WCAG 2 A and AA rules.
+- [ ] Search page has no automated axe violations for WCAG 2 A and AA rules.
 - [ ] Public homepage has no automated axe violations.
 - [ ] Login page has no automated axe violations.
 - [ ] Goals page has no automated axe violations.
@@ -489,8 +489,8 @@ Use this legend:
 
 ## Visual Regression Coverage
 
-- [x] Public design-system route has a full-page visual baseline.
-- [x] Authenticated shelf page has a full-page visual baseline.
+- [ ] Public design-system route has a full-page visual baseline.
+- [ ] Authenticated shelf page has a full-page visual baseline.
 - [ ] Public homepage has a full-page visual baseline.
 - [ ] Public homepage signed-in state has a full-page visual baseline.
 - [ ] Login page has a full-page visual baseline.
@@ -515,7 +515,7 @@ Use this legend:
 
 ## Performance And Runtime Resilience
 
-- [x] Shelf route stays within the configured `domContentLoaded` budget.
+- [ ] Shelf route stays within the configured `domContentLoaded` budget.
 - [ ] Public homepage stays within a `domContentLoaded` budget.
 - [ ] Login page stays within a `domContentLoaded` budget.
 - [ ] Search route under HAR replay stays within a runtime budget.
@@ -570,10 +570,10 @@ Use this legend:
 
 ## Course And Lab Safety Nets
 
-- [x] Reader authentication setup exists for the main authenticated Playwright project.
-- [x] Administrator authentication setup exists for the lab-focused Playwright project.
-- [x] Lab fixture spec exists to validate the intended starting state for course exercises.
-- [x] Broken-trace lab scenarios exist as dedicated specs in the labs folder.
+- [ ] Reader authentication setup exists for the main authenticated Playwright project.
+- [ ] Administrator authentication setup exists for the lab-focused Playwright project.
+- [ ] Lab fixture spec exists to validate the intended starting state for course exercises.
+- [ ] Broken-trace lab scenarios exist as dedicated specs in the labs folder.
 - [ ] Course labs still match the current homepage copy, navigation labels, and sign-in labels after product-facing copy changes.
 - [ ] Course labs still match the current shelf actions, including `Mark as read` and `Remove from shelf`.
 - [ ] Course labs still match the current search layout now that results render as a vertical list instead of a fake masonry grid.
