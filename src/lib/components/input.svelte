@@ -27,10 +27,10 @@
 	const describedBy = $derived(hint ? `${inputId}-hint` : undefined);
 </script>
 
-<label class="grid gap-2 text-sm font-medium text-[var(--color-ink)]" for={inputId}>
+<label class="grid gap-2 text-sm font-medium text-(--color-ink)" for={inputId}>
 	<span>{label}</span>
 	<input
-		class="w-full appearance-none rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus:border-[var(--color-border-strong)] focus:ring-[var(--color-border-strong)] disabled:text-[var(--color-muted)] disabled:opacity-100"
+		class="w-full appearance-none rounded-(--radius-control) border border-(--color-border) bg-(--color-surface) px-4 py-3 text-sm text-(--color-ink) placeholder:text-(--color-muted) focus:border-(--color-border-strong) focus:ring-(--color-border-strong) disabled:text-(--color-muted) disabled:opacity-100"
 		id={inputId}
 		{name}
 		{type}
@@ -42,6 +42,6 @@
 		{value}
 	/>
 	{#if hint}
-		<span id={describedBy} class="text-xs font-normal text-[var(--color-muted)]">{hint}</span>
+		<span id={describedBy} class="text-xs font-normal text-(--color-muted)">{hint}</span>
 	{/if}
 </label>

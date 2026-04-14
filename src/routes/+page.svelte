@@ -58,8 +58,6 @@
 			<div class="flex flex-wrap gap-3">
 				{#if data.user}
 					<Button href="/shelf">Open your shelf</Button>
-				{:else}
-					<Button href="/login">Sign in</Button>
 				{/if}
 			</div>
 		{/snippet}
@@ -73,10 +71,10 @@
 			<div class="grid gap-3 sm:grid-cols-2">
 				{#each productHighlights as highlight (highlight.title)}
 					<div
-						class="rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] p-4"
+						class="rounded-2xl border border-(--color-border-strong) bg-(--color-surface-soft) p-4"
 					>
-						<p class="text-sm font-semibold text-[var(--color-ink)]">{highlight.title}</p>
-						<p class="mt-2 text-sm text-[var(--color-muted)]">{highlight.description}</p>
+						<p class="text-sm font-semibold text-(--color-ink)">{highlight.title}</p>
+						<p class="mt-2 text-sm text-(--color-muted)">{highlight.description}</p>
 					</div>
 				{/each}
 			</div>
@@ -91,13 +89,13 @@
 				{#each readingFlow as step, index (step.title)}
 					<li class="flex gap-4">
 						<span
-							class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-soft)] text-sm font-semibold text-[var(--color-accent-strong)]"
+							class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--color-surface-soft) text-sm font-semibold text-(--color-accent-strong)"
 						>
 							{index + 1}
 						</span>
 						<div class="space-y-1">
-							<p class="text-sm font-semibold text-[var(--color-ink)]">{step.title}</p>
-							<p class="text-sm leading-6 text-[var(--color-muted)]">{step.description}</p>
+							<p class="text-sm font-semibold text-(--color-ink)">{step.title}</p>
+							<p class="text-sm leading-6 text-(--color-muted)">{step.description}</p>
 						</div>
 					</li>
 				{/each}
@@ -107,13 +105,11 @@
 
 	<section class="space-y-5">
 		<div class="space-y-2">
-			<p
-				class="text-xs font-semibold tracking-[0.22em] text-[var(--color-accent-strong)] uppercase"
-			>
+			<p class="text-xs font-semibold tracking-[0.22em] text-(--color-accent-strong) uppercase">
 				On readers' shelves
 			</p>
-			<h2 class="font-display text-3xl text-[var(--color-ink)]">A few books worth keeping close</h2>
-			<p class="max-w-3xl text-sm text-[var(--color-muted)]">
+			<h2 class="font-display text-3xl text-(--color-ink)">A few books worth keeping close</h2>
+			<p class="max-w-3xl text-sm text-(--color-muted)">
 				Featured titles show the kind of record Shelf keeps: what the book is, where it sits in your
 				reading life, and how you felt about it when you were done.
 			</p>

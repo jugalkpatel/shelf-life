@@ -43,19 +43,19 @@
 		aria-labelledby="rate-book-dialog-title"
 		tabindex="-1"
 		onkeydown={handleDialogKeydown}
-		class="w-full max-w-md rounded-[var(--radius-card)] bg-[var(--color-surface)] p-6 shadow-xl"
+		class="w-full max-w-md rounded-(--radius-card) bg-(--color-surface) p-6 shadow-xl"
 	>
-		<h2 id="rate-book-dialog-title" class="font-display text-2xl text-[var(--color-ink)]">
+		<h2 id="rate-book-dialog-title" class="font-display text-2xl text-(--color-ink)">
 			Rate {entry.book.title}
 		</h2>
-		<p class="mt-1 text-sm text-[var(--color-muted)]">by {entry.book.author}</p>
+		<p class="mt-1 text-sm text-(--color-muted)">by {entry.book.author}</p>
 
 		<form class="mt-5 space-y-5" onsubmit={handleSubmit}>
 			<fieldset>
-				<legend class="text-sm font-medium text-[var(--color-ink)]">Your rating</legend>
+				<legend class="text-sm font-medium text-(--color-ink)">Your rating</legend>
 				<div class="mt-2 flex gap-2" role="radiogroup" aria-label="Stars">
 					{#each stars as value (value)}
-						<label class="flex items-center gap-1 text-sm text-[var(--color-ink)]">
+						<label class="flex items-center gap-1 text-sm text-(--color-ink)">
 							<input
 								type="radio"
 								name="rating"
@@ -73,7 +73,7 @@
 			<div class="flex flex-wrap justify-end gap-3">
 				<button
 					type="button"
-					class="inline-flex items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-surface-soft)]"
+					class="inline-flex items-center justify-center rounded-full border border-(--color-border-strong) bg-(--color-surface) px-4 py-2 text-sm font-semibold text-(--color-ink) transition hover:bg-(--color-surface-soft)"
 					onclick={oncancel}
 				>
 					Cancel
@@ -81,7 +81,7 @@
 				<button
 					type="submit"
 					disabled={pendingRating < 1}
-					class="inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-strong)] disabled:cursor-not-allowed disabled:opacity-50"
+					class="inline-flex items-center justify-center rounded-full bg-(--color-accent) px-4 py-2 text-sm font-semibold text-white transition hover:bg-(--color-accent-strong) disabled:cursor-not-allowed disabled:opacity-50"
 				>
 					Save rating
 				</button>

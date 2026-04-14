@@ -141,13 +141,13 @@
 
 	<section class="grid gap-5 md:grid-cols-3">
 		<SurfaceCard title="Books on shelf" description="Total entries">
-			<p class="font-display text-4xl text-[var(--color-ink)]">{data.summary.totalBooks}</p>
+			<p class="font-display text-4xl text-(--color-ink)">{data.summary.totalBooks}</p>
 		</SurfaceCard>
 		<SurfaceCard title="Currently reading" description="Active reads">
-			<p class="font-display text-4xl text-[var(--color-ink)]">{data.summary.readingCount}</p>
+			<p class="font-display text-4xl text-(--color-ink)">{data.summary.readingCount}</p>
 		</SurfaceCard>
 		<SurfaceCard title="Average rating" description="Out of 5">
-			<p class="font-display text-4xl text-[var(--color-ink)]">
+			<p class="font-display text-4xl text-(--color-ink)">
 				{data.summary.averageRating ?? '—'}
 			</p>
 		</SurfaceCard>
@@ -162,7 +162,7 @@
 		<div class="space-y-3">
 			{#if data.readingGoal.targetBooks !== null}
 				<div
-					class="h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-soft)]"
+					class="h-3 w-full overflow-hidden rounded-full bg-(--color-surface-soft)"
 					role="progressbar"
 					aria-valuenow={data.readingGoal.percentage}
 					aria-valuemin="0"
@@ -170,7 +170,7 @@
 					aria-label={`${data.readingGoal.percentage} percent of annual reading goal met`}
 				>
 					<div
-						class={`h-full ${data.readingGoal.goalMet ? 'bg-green-500' : 'bg-[var(--color-accent)]'} transition-all`}
+						class={`h-full ${data.readingGoal.goalMet ? 'bg-green-500' : 'bg-(--color-accent)'} transition-all`}
 						style:width={`${data.readingGoal.percentage}%`}
 					></div>
 				</div>
@@ -212,37 +212,37 @@
 		/>
 	{:else}
 		<section class="space-y-4">
-			<h2 class="font-display text-3xl text-[var(--color-ink)]">Your books</h2>
+			<h2 class="font-display text-3xl text-(--color-ink)">Your books</h2>
 			<ul class="grid gap-5 lg:grid-cols-2">
 				{#each data.entries as entry (entry.id)}
 					<li>
 						<article
 							aria-label={`${entry.book.title} by ${entry.book.author}`}
-							class="grid gap-4 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-card)]"
+							class="grid gap-4 rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-card)"
 						>
 							<div class="flex items-start justify-between gap-4">
 								<div>
-									<h3 class="font-display text-2xl text-[var(--color-ink)]">{entry.book.title}</h3>
-									<p class="mt-1 text-sm font-medium text-[var(--color-muted)]">
+									<h3 class="font-display text-2xl text-(--color-ink)">{entry.book.title}</h3>
+									<p class="mt-1 text-sm font-medium text-(--color-muted)">
 										{entry.book.author}
 									</p>
 								</div>
 								<span
-									class="rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-3 py-1 text-xs font-semibold tracking-[0.16em] text-[var(--color-accent-strong)] uppercase"
+									class="rounded-full border border-(--color-border-strong) bg-(--color-surface-soft) px-3 py-1 text-xs font-semibold tracking-[0.16em] text-(--color-accent-strong) uppercase"
 								>
 									{shelfStatusLabels[entry.status]}
 								</span>
 							</div>
 							{#if entry.book.description}
-								<p class="text-sm leading-6 text-[var(--color-muted)]">{entry.book.description}</p>
+								<p class="text-sm leading-6 text-(--color-muted)">{entry.book.description}</p>
 							{/if}
 							<div class="flex flex-wrap items-center justify-between gap-3">
-								<span class="text-xs text-[var(--color-muted)]">
+								<span class="text-xs text-(--color-muted)">
 									Open Library: {entry.book.openLibraryId}
 								</span>
 								<div class="flex flex-wrap items-center gap-3">
 									{#if entry.rating !== null}
-										<span class="text-sm font-semibold text-[var(--color-ink)]">
+										<span class="text-sm font-semibold text-(--color-ink)">
 											Rated: {entry.rating}/5
 										</span>
 									{/if}

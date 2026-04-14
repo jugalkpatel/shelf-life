@@ -14,9 +14,7 @@
 			: `You've read ${data.progress.finishedBooks} of ${data.progress.targetBooks} books this year.`
 	);
 
-	const progressBarColor = $derived(
-		data.progress.goalMet ? 'bg-green-500' : 'bg-[var(--color-accent)]'
-	);
+	const progressBarColor = $derived(data.progress.goalMet ? 'bg-green-500' : 'bg-(--color-accent)');
 </script>
 
 <div class="space-y-8">
@@ -32,16 +30,13 @@
 			description={`Finished books in ${data.progress.year} count toward your goal.`}
 		>
 			<div class="space-y-4">
-				<p
-					class="font-display text-3xl text-[var(--color-ink)]"
-					aria-label="Reading progress summary"
-				>
+				<p class="font-display text-3xl text-(--color-ink)" aria-label="Reading progress summary">
 					{progressLabel}
 				</p>
 
 				{#if data.progress.targetBooks !== null}
 					<div
-						class="h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-soft)]"
+						class="h-3 w-full overflow-hidden rounded-full bg-(--color-surface-soft)"
 						role="progressbar"
 						aria-valuenow={data.progress.percentage}
 						aria-valuemin="0"
@@ -53,7 +48,7 @@
 							style:width={`${data.progress.percentage}%`}
 						></div>
 					</div>
-					<p class="text-sm text-[var(--color-muted)]">
+					<p class="text-sm text-(--color-muted)">
 						{data.progress.percentage}% of the way there.
 					</p>
 				{/if}

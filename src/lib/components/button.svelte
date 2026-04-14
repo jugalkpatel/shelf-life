@@ -37,13 +37,13 @@
 
 	const classes = $derived(
 		[
-			'inline-flex items-center justify-center rounded-[var(--radius-control)] px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]',
+			'inline-flex items-center justify-center rounded-(--radius-control) px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-accent)',
 			kind === 'primary' &&
-				'bg-[var(--color-accent-strong)] text-white hover:bg-[var(--color-accent-strongest)]',
+				'bg-(--color-accent-strong) text-white hover:bg-(--color-accent-strongest)',
 			kind === 'secondary' &&
-				'border border-[var(--color-border-strong)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-surface-soft)]',
+				'border border-(--color-border-strong) bg-(--color-surface) text-(--color-ink) hover:bg-(--color-surface-soft)',
 			kind === 'ghost' &&
-				'bg-transparent text-[var(--color-muted)] hover:bg-white/60 hover:text-[var(--color-ink)]',
+				'bg-transparent text-(--color-muted) hover:bg-white/60 hover:text-(--color-ink)',
 			disabled && 'cursor-not-allowed opacity-50'
 		]
 			.filter(Boolean)

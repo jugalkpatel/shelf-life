@@ -21,22 +21,20 @@
 </script>
 
 <section
-	class={`rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-card)] ${paddingClass} ${className}`.trim()}
+	class={`rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-card) ${paddingClass} ${className}`.trim()}
 >
 	{#if eyebrow || title || description}
 		<div class="space-y-2">
 			{#if eyebrow}
-				<p
-					class="text-xs font-semibold tracking-[0.22em] text-[var(--color-accent-strong)] uppercase"
-				>
+				<p class="text-xs font-semibold tracking-[0.22em] text-(--color-accent-strong) uppercase">
 					{eyebrow}
 				</p>
 			{/if}
 			{#if title}
-				<h2 class="font-display text-2xl text-[var(--color-ink)]">{title}</h2>
+				<h2 class="font-display text-2xl text-(--color-ink)">{title}</h2>
 			{/if}
 			{#if description}
-				<p class="text-sm leading-6 text-[var(--color-muted)]">{description}</p>
+				<p class="text-sm leading-6 text-(--color-muted)">{description}</p>
 			{/if}
 		</div>
 	{/if}

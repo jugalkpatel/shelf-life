@@ -93,8 +93,8 @@
 	{:else}
 		<section class="space-y-4">
 			<div class="flex items-center justify-between gap-3">
-				<h2 class="font-display text-3xl text-[var(--color-ink)]">Search results</h2>
-				<p class="text-sm text-[var(--color-muted)]">
+				<h2 class="font-display text-3xl text-(--color-ink)">Search results</h2>
+				<p class="text-sm text-(--color-muted)">
 					{data.results.length} result{data.results.length === 1 ? '' : 's'}
 				</p>
 			</div>
@@ -104,26 +104,26 @@
 					<li>
 						<article
 							aria-label={`${result.title} by ${result.author}`}
-							class="grid gap-4 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-card)]"
+							class="grid gap-4 rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-card)"
 						>
 							<div>
-								<h3 class="font-display text-2xl text-[var(--color-ink)]">{result.title}</h3>
-								<p class="mt-1 text-sm font-medium text-[var(--color-muted)]">{result.author}</p>
+								<h3 class="font-display text-2xl text-(--color-ink)">{result.title}</h3>
+								<p class="mt-1 text-sm font-medium text-(--color-muted)">{result.author}</p>
 								{#if result.publishedYear}
-									<p class="text-xs text-[var(--color-muted)]">
+									<p class="text-xs text-(--color-muted)">
 										First published {result.publishedYear}
 									</p>
 								{/if}
 							</div>
 							{#if result.description}
-								<p class="text-sm leading-6 text-[var(--color-muted)]">{result.description}</p>
+								<p class="text-sm leading-6 text-(--color-muted)">{result.description}</p>
 							{/if}
 							<div
-								class="flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--color-muted)]"
+								class="flex flex-wrap items-center justify-between gap-3 text-xs text-(--color-muted)"
 							>
 								<span>Open Library: {result.openLibraryId}</span>
 								{#if result.onShelf}
-									<span class="font-semibold text-[var(--color-accent-strong)]"
+									<span class="font-semibold text-(--color-accent-strong)"
 										>Already on your shelf</span
 									>
 								{:else}

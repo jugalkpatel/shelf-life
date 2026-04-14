@@ -61,7 +61,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-display text-3xl text-[var(--color-ink)]">Starter library cards</h2>
+		<h2 class="font-display text-3xl text-(--color-ink)">Starter library cards</h2>
 		<div class="grid gap-5 lg:grid-cols-3">
 			{#each featuredBooks as book (book.id)}
 				<BookCard {book} />

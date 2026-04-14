@@ -37,7 +37,7 @@
 			title="Your reading history lives here"
 			description="Shelf keeps your to-read list, finished books, ratings, and yearly goal in one place."
 		>
-			<ul class="space-y-3 text-sm text-[var(--color-muted)]">
+			<ul class="space-y-3 text-sm text-(--color-muted)">
 				<li>Keep your shelf and reading progress in sync.</li>
 				<li>Create an account without leaving this screen.</li>
 				<li>Return to the page you originally wanted after you sign in.</li>
@@ -94,7 +94,7 @@
 
 				<button
 					type="submit"
-					class="text-sm font-medium text-[var(--color-muted)] underline-offset-4 transition hover:text-[var(--color-ink)] hover:underline"
+					class="text-sm font-medium text-(--color-muted) underline-offset-4 transition hover:text-(--color-ink) hover:underline"
 				>
 					Already have an account? Sign in instead.
 				</button>
@@ -108,7 +108,7 @@
 
 				<button
 					type="submit"
-					class="text-sm font-medium text-[var(--color-muted)] underline-offset-4 transition hover:text-[var(--color-ink)] hover:underline"
+					class="text-sm font-medium text-(--color-muted) underline-offset-4 transition hover:text-(--color-ink) hover:underline"
 				>
 					Need an account? Create one instead.
 				</button>
