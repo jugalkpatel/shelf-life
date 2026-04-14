@@ -53,6 +53,24 @@
 					>
 						Search
 					</a>
+					<a
+						class={[
+							baseLinkClasses,
+							isCurrentPath('/design-system') ? activeLinkClasses : inactiveLinkClasses
+						]}
+						href={resolve('/design-system')}
+					>
+						Design system
+					</a>
+					<a
+						class={[
+							baseLinkClasses,
+							isCurrentPath('/playground') ? activeLinkClasses : inactiveLinkClasses
+						]}
+						href={resolve('/playground')}
+					>
+						Playground
+					</a>
 					{#if currentUser}
 						<a
 							class={[
