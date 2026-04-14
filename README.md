@@ -84,7 +84,7 @@ Drizzle Studio will print a local URL in the terminal. Open that URL in your bro
 
 ## Promote a reader to administrator
 
-**How administrator access works today:** Shelf does not have a `role` column yet. Administrator access is granted by a hard-coded email allowlist in `src/lib/server/authorization.ts`.
+**How administrator access works today:** Shelf stores administrator access directly on the `user.isAdmin` column.
 
 To promote a local account:
 
@@ -92,12 +92,9 @@ To promote a local account:
 - Open Drizzle Studio with `npm run db:studio`.
 - Open the `user` table.
 - Find the row for the account you want to promote.
-- Change the `email` value to `admin@example.com`.
+- Change `isAdmin` to `true`.
 - Save the row.
-- Sign out, then sign back in with `admin@example.com` and the same password.
-
-> [!WARNING]
-> Use the exact email address `admin@example.com`. That is the only administrator email recognized by the starter right now.
+- Sign out, then sign back in so the next request picks up the updated user row.
 
 ## Verification commands
 

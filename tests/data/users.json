@@ -2,11 +2,13 @@
 	{
 		"email": "alice@example.com",
 		"password": "ShelfStarter123!",
-		"name": "Alice Reader"
+		"name": "Alice Reader",
+		"isAdmin": false
 	},
 	{
 		"email": "admin@example.com",
 		"password": "ShelfStarter123!",
-		"name": "Admin Reader"
+		"name": "Admin Reader",
+		"isAdmin": true
 	}
 ]

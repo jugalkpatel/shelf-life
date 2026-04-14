@@ -7,6 +7,7 @@ export type CreateUserInput = {
 	email: string;
 	password: string;
 	name: string;
+	isAdmin?: boolean;
 };
 
 export const findUserByEmail = async (email: string) => {
@@ -17,10 +18,14 @@ export const findUserByEmail = async (email: string) => {
 export const createUser = async ({
 	email,
 	password,
-	name
+	name,
+	isAdmin = false
 }: CreateUserInput): Promise<typeof user.$inferSelect> => {
 	const passwordHash = await hashPassword(password);
-	const [created] = await db.insert(user).values({ email, name, passwordHash }).returning();
+	const [created] = await db
+		.insert(user)
+		.values({ email, name, passwordHash, isAdmin })
+		.returning();
 
 	if (!created) {
 		throw new Error(`Failed to create user ${email}`);

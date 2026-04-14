@@ -1,19 +1,20 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import AppShell from '$lib/components/app-shell.svelte';
+	import Application from '$lib/components/shell.svelte';
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import type { LayoutData } from './$types';
+	import type { Pathname } from '$app/types';
 
 	let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 
-	const titles = {
+	const titles: Partial<Record<Pathname, string>> = {
 		'/': 'Shelf',
-		'/login': 'Sign in | Shelf',
-		'/search': 'Search | Shelf',
-		'/shelf': 'Your shelf | Shelf',
-		'/design-system': 'Design system | Shelf',
-		'/playground': 'Locator playground | Shelf'
+		'/login': 'Sign in',
+		'/search': 'Search',
+		'/shelf': 'Your shelf',
+		'/design-system': 'Design system',
+		'/playground': 'Locator playground'
 	};
 
 	const title = $derived(titles[page.url.pathname as keyof typeof titles] ?? 'Shelf');
@@ -21,13 +22,13 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>{title}</title>
+	<title>{title} | Shelf</title>
 	<meta
 		name="description"
 		content="Shelf helps you search for books, build a shelf, rate what you finish, and track your reading goals."
 	/>
 </svelte:head>
 
-<AppShell currentPath={page.url.pathname} currentUser={data.user}>
+<Application currentPath={page.url.pathname} currentUser={data.user}>
 	{@render children()}
-</AppShell>
+</Application>

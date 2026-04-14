@@ -8,7 +8,7 @@ import type { RequestHandler } from './$types';
 /**
  * Admin surface for featuring books on the public home page. Only Shelf
  * administrators may call this endpoint — `requireAdministrator` throws a 403
- * when the signed-in reader is not in the administrator allowlist.
+ * when the signed-in reader does not have administrator access.
  */
 
 type FeatureBookBody = {

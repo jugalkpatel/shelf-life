@@ -30,20 +30,27 @@ const notImplemented = (functionName: string): never => {
 };
 
 /**
- * LAB SCAFFOLD ONLY.
+ * Rebuilds the test database from `tests/data/*.json`.
  *
- * The starter ships the data files and the low-level create/delete utilities.
- * Students implement the actual reset logic as part of the course work.
+ * The intended implementation should:
+ * - remove existing users, books, and shelf entries
+ * - recreate the reader and admin users from `users.json`
+ * - recreate the books from `books.json`
+ * - recreate the shelf entries from `shelf-entries.json`
+ * - return the created reader/admin user summaries plus the created books
  */
 export async function seedFreshDatabase(): Promise<SeedResult> {
 	return notImplemented('seedFreshDatabase');
 }
 
 /**
- * LAB SCAFFOLD ONLY.
+ * Resets shelf state without destroying existing user accounts or sessions.
  *
- * The intended implementation should preserve user accounts/sessions while
- * resetting books and shelf entries back to the JSON fixtures above.
+ * The intended implementation should:
+ * - leave the existing reader/admin users in place
+ * - delete and recreate books from `books.json`
+ * - delete and recreate shelf entries from `shelf-entries.json`
+ * - return the existing reader/admin user summaries plus the recreated books
  */
 export async function resetShelfContent(): Promise<SeedResult> {
 	return notImplemented('resetShelfContent');

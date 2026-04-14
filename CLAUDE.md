@@ -43,4 +43,4 @@ Do not report a task complete with any of these failing. If a failure looks unre
 - Do not silence type errors with `any` or `@ts-expect-error`. Fix the type.
 - Do not add `eslint-disable` comments. Fix the code.
 - Do not add new dependencies without flagging them in your summary.
-- Do not modify `src/lib/server/db/auth.schema.ts` by hand — regenerate with `npm run auth:schema`.
+- Do not hand-edit generated artifacts or build output.
