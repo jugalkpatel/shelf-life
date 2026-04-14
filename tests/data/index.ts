@@ -8,10 +8,4 @@ if (!reader || !admin) {
 	throw new Error('Expected tests/data/users.json to include the reader and admin users');
 }
 
-export {
-  users,
-  books,
-  shelfEntries,
-  reader,
-  admin
-};
+export { users, books, shelfEntries, reader, admin };

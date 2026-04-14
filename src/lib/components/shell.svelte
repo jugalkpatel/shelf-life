@@ -18,13 +18,14 @@
 		children: Snippet;
 	} = $props();
 
-	const linkClasses = (href: string) =>
-		[
-			'rounded-[var(--radius-control)] px-3 py-2 text-sm font-medium transition',
-			currentPath === href || currentPath.startsWith(`${href}/`)
-				? 'bg-[var(--color-surface-soft)] text-[var(--color-ink)]'
-				: 'text-[var(--color-muted)] hover:bg-white/60 hover:text-[var(--color-ink)]'
-		].join(' ');
+	const baseLinkClasses =
+		'rounded-[var(--radius-control)] px-3 py-2 text-sm font-medium transition';
+	const activeLinkClasses = 'bg-[var(--color-surface-soft)] text-[var(--color-ink)]';
+	const inactiveLinkClasses =
+		'text-[var(--color-muted)] hover:bg-white/60 hover:text-[var(--color-ink)]';
+
+	const isCurrentPath = (href: string) =>
+		currentPath === href || currentPath.startsWith(`${href}/`);
 </script>
 
 <div class="min-h-screen">
@@ -39,11 +40,38 @@
 					Shelf
 				</a>
 				<nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
-					<a class={linkClasses('/')} href={resolve('/')}>Home</a>
-					<a class={linkClasses('/search')} href={resolve('/search')}>Search</a>
+					<a
+						class={[baseLinkClasses, isCurrentPath('/') ? activeLinkClasses : inactiveLinkClasses]}
+						href={resolve('/')}>Home</a
+					>
+					<a
+						class={[
+							baseLinkClasses,
+							isCurrentPath('/search') ? activeLinkClasses : inactiveLinkClasses
+						]}
+						href={resolve('/search')}
+					>
+						Search
+					</a>
 					{#if currentUser}
-						<a class={linkClasses('/shelf')} href={resolve('/shelf')}>Shelf</a>
-						<a class={linkClasses('/goals')} href={resolve('/goals')}>Goals</a>
+						<a
+							class={[
+								baseLinkClasses,
+								isCurrentPath('/shelf') ? activeLinkClasses : inactiveLinkClasses
+							]}
+							href={resolve('/shelf')}
+						>
+							Shelf
+						</a>
+						<a
+							class={[
+								baseLinkClasses,
+								isCurrentPath('/goals') ? activeLinkClasses : inactiveLinkClasses
+							]}
+							href={resolve('/goals')}
+						>
+							Goals
+						</a>
 					{/if}
 				</nav>
 			</div>
@@ -64,7 +92,7 @@
 		</div>
 	</header>
 
-	<main class="mx-auto w-full max-w-[var(--page-width)] px-[var(--page-gutter)] py-10 md:py-14">
+	<main class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) py-10 md:py-14">
 		{@render children()}
 	</main>
 </div>

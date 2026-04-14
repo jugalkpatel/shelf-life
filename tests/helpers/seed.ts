@@ -1,6 +1,5 @@
-
 import type { BookSummary, UserSummary } from '../../src/lib/server/db';
-import * as data from '../data';
+// import * as data from '../data';
 
 export type SeedResult = {
 	reader: UserSummary;
