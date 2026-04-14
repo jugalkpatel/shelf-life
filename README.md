@@ -1,15 +1,30 @@
 # Shelf
 
-Shelf is the starter SvelteKit application for the [**Self-Testing AI Agents**](https://stevekinney.com/courses/self-testing-ai-agents) course. The repository is intentionally small on day one: a working app shell, a few protected routes, and a tiny Playwright smoke loop that later lessons expand.
+Shelf is the starter SvelteKit application for the [**Self-Testing AI Agents**](https://stevekinney.com/courses/self-testing-ai-agents) course. The repository is intentionally small on day one: a working app shell, a few public and protected routes, app-native email and password authentication, and a tiny Playwright smoke loop that later lessons expand.
 
-## Starter routes
+## Stack
 
-- `/`: public home page
-- `/login`: app-native email and password authentication
-- `/search`: protected starter search surface
-- `/shelf`: protected shelf shell
+- [SvelteKit](https://svelte.dev/) 2 with Svelte 5 on [Vite](https://vite.dev/) 8
+- TypeScript, ESLint, Prettier
+- [Drizzle ORM](https://orm.drizzle.team/) on [libSQL](https://github.com/tursodatabase/libsql) (local SQLite file by default)
+- [Tailwind CSS](https://tailwindcss.com/) 4 with `@tailwindcss/forms` and `@tailwindcss/typography`
+- [Vitest](https://vitest.dev/) for unit tests, [Playwright](https://playwright.dev/) for end-to-end tests
+
+## Routes
+
+Public:
+
+- `/`: home page
+- `/login`: email and password sign-in and registration
 - `/design-system`: component gallery for later UI exercises
 - `/playground`: locator-practice page used later in the course
+
+Protected (gated server-side on `locals.user`):
+
+- `/search`: book search surface
+- `/shelf`: personal shelf
+- `/goals`: reading goals
+- `/admin`: administrator surface (requires `user.isAdmin = true`)
 
 ## What is intentionally not built yet
 
@@ -30,33 +45,33 @@ This starter is meant to grow with the course. These pieces are added later:
 
 ## Environment variables
 
-Copy `.env.example` to `.env` and fill in the values:
+Copy `.env.example` to `.env`:
 
 ```sh
 cp .env.example .env
 ```
 
-Required variables:
+All variables have course-friendly defaults, so the app runs without any edits:
 
-- `DATABASE_URL`
-- `ORIGIN`
-- `BETTER_AUTH_SECRET`
+- `DATABASE_URL` — libSQL connection string. Defaults to `file:./tmp/local.db`.
+- `OPEN_LIBRARY_BASE_URL` — Open Library API base. Defaults to `https://openlibrary.org`.
 
-The local `.env` file in this repository is set up for development with a local SQLite database.
+The `prepare` script copies `.env.example` to `.env` on first install if one is not already present.
 
 ## Local development
 
-Install dependencies with npm:
+Install dependencies:
 
 ```sh
 npm install
 ```
 
-Generate the Better Auth schema if needed:
+`npm install` runs the `prepare` script, which:
 
-```sh
-npm run auth:schema
-```
+1. Creates `tmp/` and copies `.env.example` to `.env` if missing
+2. Installs Playwright browsers
+3. Syncs SvelteKit types
+4. Applies the Drizzle schema to the local SQLite database (`db:push`)
 
 Start the development server:
 
@@ -64,37 +79,52 @@ Start the development server:
 npm run dev
 ```
 
-## Open the database in Drizzle Studio
+The app listens on `http://localhost:5173`.
 
-If you want to inspect the local SQLite database in a browser, Drizzle Studio is the quickest way to do it.
+## Database
 
-Make sure the schema exists first:
+The local database lives at `tmp/local.db`. The db client auto-creates its parent directory on startup, so you never need to create `tmp/` by hand.
+
+Re-apply the schema after changing `src/lib/server/db/schema.ts`:
 
 ```sh
 npm run db:push
 ```
 
-Start Drizzle Studio:
+Inspect or edit data in a browser with Drizzle Studio:
 
 ```sh
 npm run db:studio
 ```
 
-Drizzle Studio will print a local URL in the terminal. Open that URL in your browser, then use the `user` table to inspect or edit reader accounts.
+Drizzle Studio prints a local URL in the terminal.
 
 ## Promote a reader to administrator
 
-**How administrator access works today:** Shelf stores administrator access directly on the `user.isAdmin` column.
+Administrator access is stored on the `user.isAdmin` column.
 
 To promote a local account:
 
-- Create the account through `/login` first if it does not exist yet.
+- Register the account at `/login` first if it does not exist yet.
 - Open Drizzle Studio with `npm run db:studio`.
 - Open the `user` table.
-- Find the row for the account you want to promote.
-- Change `isAdmin` to `true`.
-- Save the row.
-- Sign out, then sign back in so the next request picks up the updated user row.
+- Flip `isAdmin` to `true` for the relevant row and save.
+- Sign out and sign back in so the session picks up the updated user row.
+
+## Scripts
+
+| Script              | Purpose                                        |
+| ------------------- | ---------------------------------------------- |
+| `npm run dev`       | Start the Vite dev server                      |
+| `npm run build`     | Production build                               |
+| `npm run preview`   | Preview the production build                   |
+| `npm run typecheck` | `svelte-kit sync` + `svelte-check`             |
+| `npm run lint`      | `prettier --check` + `eslint`                  |
+| `npm run test:unit` | Vitest (unit tests co-located next to sources) |
+| `npm run test`      | Playwright end-to-end tests from `tests/`      |
+| `npm run test:all`  | Unit tests, then end-to-end tests              |
+| `npm run db:push`   | Apply the Drizzle schema to the local database |
+| `npm run db:studio` | Open Drizzle Studio against the local database |
 
 ## Verification commands
 
@@ -106,15 +136,24 @@ npm run lint
 npm run test
 ```
 
-If you only need the browser layer:
-
-```sh
-npm run test:e2e
-```
+A task is not done until all three exit zero.
 
 ## Testing notes
 
-- Unit tests run with Vitest.
-- End-to-end tests run with Playwright from `tests/end-to-end`.
-- The default Playwright suite is intentionally small and only covers public starter routes.
+- Unit tests live next to the file under test as `<name>.test.ts` and run with Vitest.
+- End-to-end tests live in `tests/` and run with Playwright. The starter suite is intentionally small and only covers public starter routes.
+- Playwright locators follow the rules in `CLAUDE.md`: `getByRole` first, then `getByLabel` / `getByText`, and `data-testid` only when semantics genuinely don't exist. No raw CSS or XPath selectors, and no `waitForTimeout` or `waitForLoadState('networkidle')`.
 - Later course labs add the larger Playwright setup, extra scripts, and the stricter verification loop.
+
+## Project layout
+
+```
+src/
+  routes/              # SvelteKit routes (public + (authenticated) group + admin + api)
+  lib/
+    server/            # server-only modules: db, auth/session, users, environment
+    components/        # Svelte components shared across routes
+scripts/               # repo maintenance scripts (e.g. prepare-environment.mjs)
+tests/                 # Playwright specs and helpers
+tmp/                   # local SQLite database (gitignored)
+```

@@ -7,7 +7,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"prepare": "node scripts/prepare-environment.mjs && playwright install && svelte-kit sync",
+		"prepare": "node scripts/prepare-environment.mjs && playwright install && svelte-kit sync && npm run db:push",
 		"typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest run",
