@@ -1,37 +1,19 @@
-import { env } from '$env/dynamic/private';
-import { getEnvironmentVariables } from '$lib/server/environment';
+import { getEnvironmentVariables } from '../environment';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
-import { mkdirSync } from 'node:fs';
-import path from 'node:path';
 import * as schema from './schema';
 
-const environmentConfiguration = getEnvironmentVariables(env);
+const environment = getEnvironmentVariables(process.env);
 
-const ensureLocalDatabaseDirectoryExists = (databaseUrl: string) => {
-	if (!databaseUrl.startsWith('file:')) {
-		return;
-	}
-
-	const localDatabasePath = databaseUrl.slice('file:'.length);
-	if (
-		!localDatabasePath ||
-		localDatabasePath === ':memory:' ||
-		localDatabasePath.startsWith('//')
-	) {
-		return;
-	}
-
-	const databaseDirectory = path.dirname(localDatabasePath);
-	if (!databaseDirectory || databaseDirectory === '.') {
-		return;
-	}
-
-	mkdirSync(databaseDirectory, { recursive: true });
-};
-
-ensureLocalDatabaseDirectoryExists(environmentConfiguration.databaseUrl);
-
-const client = createClient({ url: environmentConfiguration.databaseUrl });
+const client = createClient({ url: environment.databaseUrl });
 
 export const db = drizzle(client, { schema });
+
+export type UserRecord = typeof schema.user.$inferSelect;
+export type BookRecord = typeof schema.book.$inferSelect;
+export type ShelfEntryRecord = typeof schema.shelfEntry.$inferSelect;
+export type ShelfEntryStatus = (typeof schema.shelfEntryStatuses)[number];
+export type UserSummary = Pick<UserRecord, 'id' | 'email'>;
+export type BookSummary = Pick<BookRecord, 'id' | 'openLibraryId' | 'title'>;
+
+export const { shelfEntryStatuses } = schema;

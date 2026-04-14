@@ -1,0 +1,20 @@
+[
+	{
+		"openLibraryId": "OL1W",
+		"title": "Station Eleven",
+		"author": "Emily St. John Mandel",
+		"description": "A literary post-collapse novel about a traveling Shakespeare troupe."
+	},
+	{
+		"openLibraryId": "OL2W",
+		"title": "Piranesi",
+		"author": "Susanna Clarke",
+		"description": "A compact, beautifully strange novel about a house of infinite halls."
+	},
+	{
+		"openLibraryId": "OL3W",
+		"title": "Annihilation",
+		"author": "Jeff VanderMeer",
+		"description": "A biologist enters Area X and tries to stay sane."
+	}
+]

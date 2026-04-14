@@ -23,13 +23,12 @@ type OpenLibraryRawResponse = {
 	docs?: OpenLibraryRawDoc[];
 };
 
-const DEFAULT_BASE_URL = 'https://openlibrary.org';
 const SEARCH_LIMIT = 10;
 const NETWORK_TIMEOUT_MS = 4000;
 
 const environmentConfiguration = getEnvironmentVariables(env);
 
-const resolveBaseUrl = () => environmentConfiguration.openLibraryBaseUrl ?? DEFAULT_BASE_URL;
+const resolveBaseUrl = () => environmentConfiguration.openLibraryBaseUrl;
 
 const pickIdentifier = (doc: OpenLibraryRawDoc): string | null => {
 	if (doc.cover_edition_key) return doc.cover_edition_key;

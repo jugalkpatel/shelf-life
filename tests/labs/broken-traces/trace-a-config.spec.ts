@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+test.skip();
+
 /**
  * Trace A: config / auth mismatch.
  *

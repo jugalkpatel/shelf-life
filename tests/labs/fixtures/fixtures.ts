@@ -20,11 +20,11 @@ import { resetShelfContent } from '../../helpers/seed';
  *      worker-scoped yet, either).
  *   5. A fixture that duplicates what `resetShelfContent` already does.
  *
- * See `good-fixtures.ts` in the same folder for the solution state and the
- * lesson's solution writeup for the commit-by-commit narrative.
+ * The solution lives on the course site in the fixtures-refactor solution
+ * writeup. This repository intentionally keeps only the exercise file.
  */
 
-type BadFixtures = {
+type LabFixtures = {
 	setupUser: { email: string };
 	setupEmptyShelf: APIRequestContext;
 	setupShelfWithBooks: APIRequestContext;
@@ -32,7 +32,7 @@ type BadFixtures = {
 	loggedOutPage: Page;
 };
 
-export const test = base.extend<BadFixtures>({
+export const test = base.extend<LabFixtures>({
 	// Smell: name is a setup verb, not what it provides. Smell: no scope
 	// comment. Smell: this is a one-liner that doesn't need to be a fixture
 	// at all — it's just a constant.
@@ -43,17 +43,17 @@ export const test = base.extend<BadFixtures>({
 
 	// Smell: this mutates server state but has no teardown half.
 	setupEmptyShelf: async ({ request }, use) => {
-		await resetShelfContent(request);
+		await resetShelfContent();
 		// What happens between tests? Nothing. The next test inherits
 		// whatever mess this one left behind.
 		await use(request);
 	},
 
 	// Smell: same as above, and it duplicates `resetShelfContent` — the seed
-	// endpoint already shelves two books by default. This fixture is a
+	// helper already shelves two books by default. This fixture is a
 	// helper wearing a fixture costume.
 	setupShelfWithBooks: async ({ request }, use) => {
-		await resetShelfContent(request);
+		await resetShelfContent();
 		await use(request);
 	},
 

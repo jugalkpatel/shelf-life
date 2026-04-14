@@ -19,7 +19,7 @@ type ReadingGoalProgress = {
 	goalMet: boolean;
 };
 
-const buildProgress = (
+const calculateProgress = (
 	year: number,
 	targetBooks: number | null,
 	finishedBooks: number
@@ -67,7 +67,7 @@ export const getReadingGoalProgress = async (
 			)
 		);
 
-	return buildProgress(year, goalRow?.targetBooks ?? null, finishedRows.length);
+	return calculateProgress(year, goalRow?.targetBooks ?? null, finishedRows.length);
 };
 
 /**

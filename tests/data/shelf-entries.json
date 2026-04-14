@@ -1,0 +1,14 @@
+[
+	{
+		"userEmail": "alice@example.com",
+		"bookOpenLibraryId": "OL1W",
+		"status": "reading",
+		"rating": null
+	},
+	{
+		"userEmail": "alice@example.com",
+		"bookOpenLibraryId": "OL2W",
+		"status": "to-read",
+		"rating": null
+	}
+]

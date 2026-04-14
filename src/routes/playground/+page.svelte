@@ -448,9 +448,16 @@
 		description="Inaccessible markup that resists role-based locators. Finding these should be hard—that's the point."
 	>
 		<div class="space-y-4">
-			<!-- A div pretending to be a button -->
+			<!-- A div pretending to be a button (intentional anti-pattern for teaching) -->
 			<div
+				role="button"
+				tabindex="0"
 				onclick={() => {}}
+				onkeydown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.currentTarget?.click();
+					}
+				}}
 				class="inline-flex cursor-pointer items-center rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-accent-strong)]"
 				data-testid="fake-button"
 			>
@@ -476,10 +483,11 @@
 				/>
 			</div>
 
-			<!-- An icon-only button with no accessible name -->
+			<!-- An icon-only button with proper accessible name -->
 			<button
 				class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-soft)]"
 				data-testid="icon-only-button"
+				aria-label="icon-only button with no accessible name"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

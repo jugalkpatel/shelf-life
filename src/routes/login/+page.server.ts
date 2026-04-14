@@ -1,11 +1,10 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { APIError } from 'better-auth/api';
 import {
 	defaultAuthenticatedPath,
 	isValidEmailAddress,
 	resolveAuthenticatedPath
 } from '$lib/authentication-navigation';
-import { auth } from '$lib/server/auth';
+import { signIn, signUp } from '$lib/server/session';
 import type { Actions, PageServerLoad } from './$types';
 
 type AuthenticationMode = 'sign-in' | 'create-account';
@@ -64,7 +63,7 @@ const validateEmailAddress = (emailAddress: string) => {
 };
 
 const createFailure = (error: unknown, fallbackMessage: string) => {
-	if (error instanceof APIError) {
+	if (error instanceof Error) {
 		return fail(400, { message: error.message || fallbackMessage });
 	}
 
@@ -72,7 +71,7 @@ const createFailure = (error: unknown, fallbackMessage: string) => {
 };
 
 export const actions: Actions = {
-	signInEmail: async ({ request }) => {
+	signInEmail: async ({ request, cookies }) => {
 		const { email, password, returnTo } = await readAuthenticationFormData(request);
 		const emailValidationFailure = validateEmailAddress(email);
 
@@ -81,19 +80,14 @@ export const actions: Actions = {
 		}
 
 		try {
-			await auth.api.signInEmail({
-				body: {
-					email,
-					password
-				}
-			});
+			await signIn(email, password, cookies);
 		} catch (error) {
 			return createFailure(error, 'We could not sign you in with those details.');
 		}
 
 		throw redirect(303, returnTo || defaultAuthenticatedPath);
 	},
-	signUpEmail: async ({ request }) => {
+	signUpEmail: async ({ request, cookies }) => {
 		const { email, password, name, returnTo } = await readAuthenticationFormData(request);
 		const emailValidationFailure = validateEmailAddress(email);
 
@@ -102,13 +96,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			await auth.api.signUpEmail({
-				body: {
-					email,
-					password,
-					name: name || 'Shelf reader'
-				}
-			});
+			await signUp(email, password, name || 'Shelf reader', cookies);
 		} catch (error) {
 			return createFailure(error, 'We could not create that account.');
 		}

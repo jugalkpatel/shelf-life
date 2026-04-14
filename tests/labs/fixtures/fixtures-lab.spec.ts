@@ -1,10 +1,15 @@
-import { test, expect } from './bad-fixtures';
+import { test, expect } from './fixtures';
+
+test.skip(
+	process.env.PLAYWRIGHT_INCLUDE_LABS !== '1',
+	'Lab scaffold disabled by default. Set PLAYWRIGHT_INCLUDE_LABS=1 to run labs.'
+);
 
 /**
  * Green-by-default spec for the fixtures refactor lab.
  *
- * This file exercises every fixture in `bad-fixtures.ts` and passes as
- * committed. As you refactor `bad-fixtures.ts` (renaming, adding teardowns,
+ * This file exercises every fixture in `fixtures.ts` and passes as
+ * committed. As you refactor `fixtures.ts` (renaming, adding teardowns,
  * demoting helpers), update *this* spec to match. The refactor is not done
  * until this spec still passes against your changes.
  *
