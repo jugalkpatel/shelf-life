@@ -12,6 +12,7 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest run",
 		"test": "playwright test",
+		"test:ui": "playwright test --ui",
 		"test:all": "npm run test:unit && npm run test",
 		"db:push": "drizzle-kit push --force",
 		"db:studio": "drizzle-kit studio"

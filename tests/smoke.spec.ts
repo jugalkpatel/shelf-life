@@ -39,7 +39,7 @@ test('check if playground page is accessible', async ({ page }) => {
 	await page.goto('/');
 
 	const primaryNavigation = page.getByRole('navigation', { name: 'Primary' });
-	await primaryNavigation.getByRole('link', { name: 'Design Systems' }).click();
+	await primaryNavigation.getByRole('link', { name: 'Design System' }).click();
 
 	await expect(page).toHaveURL(/design-system/);
 });

@@ -50,7 +50,8 @@ test('Locate remove button inside the third item in reading list', async ({ page
 
 	const list = page.getByRole('list', { name: 'Reading list' });
 
-	const thirdItem = list.getByRole('listitem').nth(3);
+	// nth -> starts from 0
+	const thirdItem = list.getByRole('listitem').nth(2);
 
 	const removeButton = thirdItem.getByRole('button', { name: 'Remove' });
 
