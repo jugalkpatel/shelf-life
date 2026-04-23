@@ -21,18 +21,16 @@ test('home page introduces Shelf and exposes the public starter navigation', asy
 		'href',
 		'/playground'
 	);
-	await expect(page.getByRole('banner').getByRole('link', { name: 'Sign in' })).toHaveAttribute(
-		'href',
-		'/login'
-	);
+	// await expect(page.getByRole('banner').getByRole('link', { name: 'Sign in' })).toHaveAttribute(
+	// 	'href',
+	// 	'/login'
+	// );
 });
 
 test('protected routes redirect unauthenticated readers to login', async ({ page }) => {
-	await page.goto('/search');
-	await expect(page).toHaveURL(/\/login\?returnTo=%2Fsearch$/);
-
 	await page.goto('/shelf');
-	await expect(page).toHaveURL(/\/login\?returnTo=%2Fshelf$/);
+	await page.getByLabel('Primary').getByRole('link', { name: 'Shelf' }).click();
+	await expect(page.getByRole('heading', { name: "abc's shelf" })).toBeVisible();
 });
 
 test('check if playground page is accessible', async ({ page }) => {

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test as setup, expect } from '@playwright/test';
 import path from 'node:path';
 
 // TODO 1: get auth file
@@ -14,7 +14,7 @@ import path from 'node:path';
 
 const authenticationFile = path.resolve('playwright/.authentication/user.json');
 
-test('check login flow of the app', async ({ page }) => {
+setup('check login flow of the app', async ({ page }) => {
 	await page.goto('/');
 	const signinButton = page.getByRole('link', { name: 'Sign in' });
 	await expect(signinButton).toBeVisible();
